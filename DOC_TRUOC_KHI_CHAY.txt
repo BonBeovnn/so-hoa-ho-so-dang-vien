@@ -1,0 +1,87 @@
+DOC TRUOC KHI CHAY
+==================
+
+UNG DUNG SO HOA HO SO DANG VIEN
+(c) 2026 Meo may @anhduc97 - xem tep LICENSE
+
+
+LAN DAU TIEN TREN MOT MAY
+-------------------------
+1. Bam dup vao  install.bat   -> cho toi khi hien "Cai dat xong"
+2. Bam dup vao  start.bat     -> trinh duyet tu mo ra
+
+May KHONG CO MANG van cai duoc: thu muc "vendor" da chua san thu vien.
+Doc them vendor\DOC_TOI.txt neu may do dung phien ban Python khac 3.14 64-bit.
+
+NHUNG LAN SAU
+-------------
+Chi can bam dup vao  start.bat
+
+
+HUONG DAN DAY DU CO ANH CHUP
+----------------------------
+    Bam nut "Huong dan" o goc tren ben phai moi trang trong app.
+    Hoac mo tep:  docs\HUONG_DAN_VAN_HANH.md
+
+Mo bang Notepad doc cung duoc, nhung mo bang trinh duyet hoac VS Code
+thi thay ca anh chup tung buoc.
+
+
+LUU Y QUAN TRONG
+----------------
+* KHONG dong cua so den (cua so dong lenh) trong luc dang lam viec.
+  Dong cua so do la tat ung dung.
+
+* Neu trinh duyet bao "Phien khong hop le": quay lai cua so den,
+  copy dong dia chi http://127.0.0.1:8000/... roi dan vao trinh duyet.
+
+* Ung dung KHONG gui du lieu di dau ca. Moi thu chay tren may nay.
+
+* Ung dung KHONG BAO GIO xoa hay doi ten tep cua ban.
+  Thao tac duy nhat voi thu muc scan la CHEP RA.
+
+
+TAM BUOC
+--------
+0. Thong tin don vi  - ten dang bo va ma dang bo co so [2].[3].[3]
+                       LAM MOT LAN. App khong khoa cung vao don vi nao.
+1. Nap du lieu       - chon DS_DANGVIEN.xlsx, dien ma to chuc dang tung chi bo
+2. Duyet du lieu     - xem bang roi ghi so cai MAIN.xlsx
+3. Tao cay thu muc   - chon thu muc goc, tao cay 4 cap
+4. Quet tep scan     - phan loai hop le / loi, sua ten sai ngay tai cho
+5. Luan chuyen tep   - xem truoc roi chep + doi ten, ghi manifest
+6. Doi soat          - dem 104 loai tai lieu, ghi 6 cot vao MAIN.xlsx
+7. Bao cao           - xuat .docx dung the thuc va phu luc .xlsx
+
+Buoc sau chi mo khi buoc truoc da xong.
+
+
+TEN TEP SCAN PHAI DAT THE NAO
+-----------------------------
+Chi can BA PHAN:
+
+    A.ID01.65.pdf       hoac     ID01.65.pdf
+
+    A     = ma chu cai chi bo   (CO THE BO)
+    ID01  = ma dang vien, tra o sheet DSTTHC trong MAIN.xlsx
+    65    = ma loai tai lieu 1..104, tra o sheet DANH_MUC_FILE
+
+Muon tu chon thu tu thi them so o cuoi (CUNG CO THE BO):
+
+    A.ID01.65.1.pdf     hoac     ID01.65.1.pdf
+
+Khong ghi so thu tu thi app tu cap so noi tiep.
+
+Duoi tep nhan: .pdf .doc .docx .jpg .jpeg .png
+Tep khong phai PDF van duoc doi ten dung chuan nhung xep rieng vao
+thu muc _CHO_CHUYEN_PDF.
+
+
+GAP SU CO
+---------
+Moi trang deu co nut "Xuat goi chan doan" o cuoi trang.
+Bam nut do, roi gui kem tep .zip tai ve cho:
+
+    Tran Anh Duc - Chuyen vien Van phong
+
+Goi da che moi day 9-12 chu so nen gui qua email khong lo CCCD.

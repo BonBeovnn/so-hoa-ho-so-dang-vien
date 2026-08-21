@@ -1,0 +1,149 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+{% set loi = kq.canh_bao | selectattr("muc", "equalto", "loi") | list %}
+{% set canh_bao = kq.canh_bao | selectattr("muc", "equalto", "canh_bao") | list %}
+{% set thong_tin = kq.canh_bao | selectattr("muc", "equalto", "thong_tin") | list %}
+
+<p class="dan-nhap">
+  Rà soát {{ kq.dong | length }} dòng dưới đây rồi bấm ghi. Sau khi ghi,
+  <code>MAIN.xlsx</code> trở thành sổ cái chính thức &mdash; mã <code>ID</code> của mỗi
+  đảng viên từ đó <strong>không bao giờ đổi</strong>, vì mã này đã nằm trong tên tệp scan.
+</p>
+
+{% if loi %}
+<section class="the loi-nang">
+  <h3>Lỗi phải xử lý &mdash; {{ loi | length }} dòng</h3>
+  <p>Chưa ghi sổ cái được cho tới khi hết những dòng này.</p>
+  <table>
+    <thead><tr><th>Mã</th><th>Họ và tên</th><th>Vấn đề</th><th>Cách xử lý</th></tr></thead>
+    <tbody>
+      {% for c in loi %}
+      <tr><td>{{ c.id }}</td><td>{{ c.ho_ten }}</td><td>{{ c.van_de }}</td><td>{{ c.goi_y }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+
+{% if kq.du_lieu_ban %}
+<section class="the sua-du-lieu">
+  <h3>Dữ liệu cần sửa &mdash; {{ kq.du_lieu_ban | length }} giá trị</h3>
+  <p>
+    Giá trị đang lưu trong <code>MAIN.xlsx</code> khác với giá trị tính lại từ họ tên.
+    Bấm ghi là sửa theo cột bên phải. Nếu thư mục đã tạo theo tên cũ, bước 3 sẽ đổi tên
+    thư mục và giữ nguyên mọi tệp bên trong.
+  </p>
+  <table>
+    <thead><tr><th>Mã</th><th>Họ và tên</th><th>Trường</th><th>Đang lưu</th><th>Sửa thành</th><th>Lý do</th></tr></thead>
+    <tbody>
+      {% for s in kq.du_lieu_ban %}
+      <tr>
+        <td>{{ s.id }}</td><td>{{ s.ho_ten }}</td><td><code>{{ s.truong }}</code></td>
+        <td class="cu">{{ s.gia_tri_cu }}</td>
+        <td class="moi">{{ s.gia_tri_moi }}</td>
+        <td class="phu">{{ s.ly_do }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+
+{% if canh_bao %}
+<section class="the canh-bao">
+  <h3>Cảnh báo &mdash; {{ canh_bao | length }} dòng</h3>
+  <p>Không chặn tiến độ. Vẫn tạo thư mục bình thường, nhưng nên bổ sung dữ liệu.</p>
+  <table>
+    <thead><tr><th>Mã</th><th>Họ và tên</th><th>Vấn đề</th><th>App xử lý thế nào</th></tr></thead>
+    <tbody>
+      {% for c in canh_bao %}
+      <tr><td>{{ c.id }}</td><td>{{ c.ho_ten }}</td><td>{{ c.van_de }}</td><td>{{ c.goi_y }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+
+{% if thong_tin %}
+<details class="the">
+  <summary>Thông tin thêm &mdash; {{ thong_tin | length }} dòng</summary>
+  <table>
+    <thead><tr><th>Mã</th><th>Họ và tên</th><th>Nội dung</th></tr></thead>
+    <tbody>
+      {% for c in thong_tin %}
+      <tr><td>{{ c.id }}</td><td>{{ c.ho_ten }}</td><td>{{ c.van_de }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</details>
+{% endif %}
+
+<details class="the">
+  <summary>Bảng đầy đủ {{ kq.dong | length }} đảng viên</summary>
+  <div class="cuon-ngang">
+  <table class="gon">
+    <thead>
+      <tr>
+        <th>ID</th><th>Họ và tên</th><th>Thư mục chi bộ</th>
+        <th>Thư mục cá nhân</th><th>Chi bộ</th><th>Trạng thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in kq.dong %}
+      <tr>
+        <td><code>{{ d.id }}</code></td>
+        <td>{{ d.name }}</td>
+        <td><code>{{ d.unit_folder }}</code></td>
+        <td><code>{{ d.folder_name }}</code></td>
+        <td class="phu">{{ d.chi_bo_dang_sinh_hoat }}</td>
+        <td class="phu">{{ d.trang_thai }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</details>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div class="the">
+  <div class="hang-nut">
+    <button type="button" class="nut chinh" id="nut-ghi" {% if loi %}disabled{% endif %}>
+      Duyệt và ghi vào MAIN.xlsx
+    </button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite">
+      {% if loi %}Còn {{ loi | length }} lỗi phải xử lý trước.{% endif %}
+    </span>
+  </div>
+  <p class="phu">
+    Ghi theo cách an toàn: tạo tệp tạm rồi thay thế nguyên khối, đồng thời giữ 5 bản
+    sao lưu <code>MAIN.bak1..5.xlsx</code>. Nếu <code>MAIN.xlsx</code> đang mở trong
+    Excel, app sẽ báo và không làm hỏng tệp cũ.
+  </p>
+</div>
+
+<div class="the ket-qua" id="ket-qua" hidden>
+  <h3>Đã ghi sổ cái</h3>
+  <p id="da-ghi"></p>
+  <a href="/buoc/3" class="nut chinh">Sang bước 3: tạo cây thư mục &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+const nutGhi = document.getElementById('nut-ghi');
+if (nutGhi) nutGhi.addEventListener('click', async () => {
+  const tt = document.getElementById('trang-thai');
+  nutGhi.disabled = true;
+  tt.textContent = 'Đang ghi…';
+  const d = await goiApi('/api/buoc2/ghi', new FormData());
+  tt.textContent = '';
+  if (!d) { nutGhi.disabled = false; return; }
+  document.getElementById('da-ghi').textContent =
+    `Đã ghi ${d.so_dong} dòng vào ${d.da_ghi}`;
+  hien(document.getElementById('ket-qua'));
+});
+</script>
+{% endblock %}

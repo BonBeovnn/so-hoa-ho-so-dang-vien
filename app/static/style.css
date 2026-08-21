@@ -1,0 +1,521 @@
+/* Giao diện app số hóa hồ sơ đảng viên.
+   Phông hệ thống, không tải gì từ Internet — app chạy hoàn toàn ngoại tuyến.
+   Tương phản cao để đọc được trên màn hình văn phòng cũ. */
+
+:root {
+  /* Khai báo rõ chủ đề sáng: máy trạm bật chế độ tối của Windows sẽ vẽ lại
+     thanh cuộn và ô <select> theo màu tối, chữ đen trên nền đen. */
+  color-scheme: light;
+
+  --nen: #f4f5f7;
+  --the: #ffffff;
+  --vien: #d3d7de;
+  --chu: #16191d;
+  --chu-phu: #5b6470;
+  --chinh: #9c1c1c;      /* đỏ cờ, dùng cho hành động chính */
+  --chinh-dam: #7a1515;
+  --do: #b3261e;
+  --do-nen: #fdecea;
+  --vang: #8a5a00;
+  --vang-nen: #fff6e0;
+  --xanh: #1a6b3c;
+  --xanh-nen: #e8f5ed;
+  --bo-goc: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 0 4rem;
+  background: var(--nen);
+  color: var(--chu);
+  font: 15px/1.55 "Segoe UI", Tahoma, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------- đầu trang */
+
+.dau-trang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--chinh);
+  color: #fff;
+  padding: 0.9rem 1.5rem;
+}
+.dau-trang-nhan { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+.dau-trang-logo { flex: none; color: #fff; }
+.dau-trang-trai { min-width: 0; }
+.dau-trang h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+.dau-trang .phu { margin: 0.15rem 0 0; color: #f0d7d7; font-size: 0.85rem; }
+.dau-trang .phu code { color: #fff; }
+
+.nut-dau-trang {
+  flex: none;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--bo-goc);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: background-color 0.12s ease-out;
+}
+.nut-dau-trang:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* Bỏ qua thanh 7 bước để tới thẳng nội dung — người dùng bàn phím phải Tab qua
+   8 liên kết điều hướng ở mọi trang nếu không có lối tắt này. */
+.bo-qua-toi-noi-dung {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--the);
+  color: var(--chu);
+  font-weight: 600;
+  border: 2px solid var(--chinh);
+  border-radius: 0 0 var(--bo-goc) 0;
+}
+.bo-qua-toi-noi-dung:focus { left: 0; }
+main:focus { outline: none; }
+
+/* ------------------------------------------------------- thanh 7 bước */
+
+.thanh-buoc {
+  display: flex;
+  gap: 1px;
+  background: var(--vien);
+  border-bottom: 1px solid var(--vien);
+  overflow-x: auto;
+}
+.buoc {
+  /* Bảy bước phải nhìn thấy hết trên màn hình văn phòng 1366px. Cho chữ co lại
+     và cắt bằng dấu … còn hơn để bước 7 lọt ra ngoài mép phải rồi không ai biết
+     là còn bước nữa. Tên đầy đủ vẫn hiện ở tiêu đề của chính trang đó. */
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--the);
+  color: var(--chu-phu);
+  text-decoration: none;
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.buoc .ten { overflow: hidden; text-overflow: ellipsis; }
+.buoc .so {
+  flex: none;
+  width: 1.5rem; height: 1.5rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--nen);
+  border: 1px solid var(--vien);
+  font-size: 0.8rem; font-weight: 600;
+}
+.buoc.xong { color: var(--xanh); }
+.buoc.xong .so { background: var(--xanh-nen); border-color: var(--xanh); color: var(--xanh); }
+.buoc.hien-tai { background: var(--nen); color: var(--chu); font-weight: 600; box-shadow: inset 0 -3px 0 var(--chinh); }
+.buoc.khoa { opacity: 0.45; cursor: not-allowed; }
+a.buoc:hover { background: #eef0f3; }
+
+/* ------------------------------------------------------------- bố cục */
+
+main { max-width: 1080px; margin: 0 auto; padding: 1.5rem 1.5rem 0; }
+.tieu-de-buoc { margin: 0 0 0.4rem; font-size: 1.3rem; text-wrap: balance; }
+.the h3, .the h4 { text-wrap: balance; }
+.dan-nhap { margin: 0 0 1.2rem; color: var(--chu-phu); max-width: 78ch; }
+
+.the {
+  background: var(--the);
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.1rem;
+}
+.the h3 { margin: 0 0 0.5rem; font-size: 1.02rem; }
+.the > p:last-child { margin-bottom: 0; }
+
+details.the > summary { cursor: pointer; font-weight: 600; }
+details.the[open] > summary { margin-bottom: 0.8rem; }
+
+.the.loi-nang { border-left: 4px solid var(--do); }
+.the.canh-bao { border-left: 4px solid var(--vang); }
+.the.sua-du-lieu { border-left: 4px solid var(--vang); }
+.the.ket-qua { border-left: 4px solid var(--xanh); }
+
+/* ------------------------------------------------------------ ô nhập */
+
+.o-nhap { display: block; margin-bottom: 1.1rem; }
+.o-nhap .nhan { display: block; font-weight: 600; margin-bottom: 0.15rem; }
+.o-nhap .mo-ta { display: block; color: var(--chu-phu); font-size: 0.88rem; margin-bottom: 0.45rem; max-width: 78ch; }
+.o-nhap .hang { display: flex; gap: 0.5rem; }
+input[type=text] {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  font: inherit;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.88rem;
+  background: #fff;
+  color: var(--chu);
+}
+/* :focus-visible chứ không :focus — bấm chuột vào ô không cần vòng viền, nhưng
+   đi bằng Tab thì bắt buộc phải thấy con trỏ đang ở đâu. */
+input[type=text]:focus-visible,
+input[type=date]:focus-visible,
+select:focus-visible,
+textarea:focus-visible { outline: 2px solid var(--chinh); outline-offset: 1px; }
+
+/* Ô chứa chữ tiếng Việt (tên đảng bộ, địa danh) chứ không phải đường dẫn. */
+input[type=text].chu-thuong { font-family: inherit; font-size: 0.95rem; }
+input[type=text].hep { flex: 0 1 20rem; }
+.bat-buoc { color: var(--do); }
+
+/* -------------------------------------------------------------- nút */
+
+.nut {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  background: var(--the);
+  color: var(--chu);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.nut {
+  touch-action: manipulation;
+  transition: background-color 0.12s ease-out;
+  /* Nút "Sửa" nằm trong cột hẹp của bảng lỗi bị ngắt thành "Sử / a".
+     Nhãn nút là chữ cố định, ngắn — cho tràn cột còn hơn cho vỡ chữ. */
+  white-space: nowrap;
+}
+.nut:hover:not(:disabled) { background: #eef0f3; }
+.nut:focus-visible,
+.nut-dau-trang:focus-visible,
+.buoc:focus-visible,
+.bo-qua-toi-noi-dung:focus-visible,
+.danh-sach button:focus-visible,
+.hop-dau .dong:focus-visible { outline: 2px solid var(--chinh); outline-offset: 2px; }
+.nut.chinh:focus-visible { outline-color: var(--chu); }
+.nut.chinh { background: var(--chinh); border-color: var(--chinh); color: #fff; }
+.nut.chinh:hover:not(:disabled) { background: var(--chinh-dam); }
+.nut:disabled { opacity: 0.5; cursor: not-allowed; }
+.hang-nut { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+.trang-thai { color: var(--chu-phu); font-size: 0.9rem; }
+
+/* ------------------------------------------------------------ số liệu */
+
+.so-lieu { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.3rem 0 1rem; }
+.so-lieu > div {
+  background: var(--nen);
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  padding: 0.45rem 0.8rem;
+  min-width: 120px;
+}
+.so-lieu dt { color: var(--chu-phu); font-size: 0.8rem; }
+.so-lieu dd {
+  margin: 0.1rem 0 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  /* Cột số phải thẳng hàng khi so sánh giữa các lần chạy. */
+  font-variant-numeric: tabular-nums;
+}
+/* Ô số liệu chứa chữ (tên đảng bộ) thì 1.3rem là quá to, dễ tràn. */
+.so-lieu dd.chu-vua { font-size: 1rem; line-height: 1.35; overflow-wrap: anywhere; }
+
+/* -------------------------------------------------------------- bảng */
+
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th, td { text-align: left; padding: 0.4rem 0.55rem; border-bottom: 1px solid var(--vien); vertical-align: top; }
+th { background: var(--nen); font-weight: 600; white-space: nowrap; }
+td.phu { color: var(--chu-phu); }
+td.so { text-align: right; font-variant-numeric: tabular-nums; }
+td { overflow-wrap: anywhere; }
+td.cu { color: var(--do); text-decoration: line-through; }
+td.moi { color: var(--xanh); font-weight: 600; }
+table.gon td, table.gon th { padding: 0.3rem 0.5rem; }
+.cuon-ngang { overflow-x: auto; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
+code.nho { font-size: 0.8em; color: var(--chu-phu); }
+
+tr.hd-loi { background: var(--do-nen); }
+tr.hd-doi_ten, tr.hd-chuyen_chi_bo { background: var(--vang-nen); }
+tr.hd-da_co { color: var(--chu-phu); }
+
+/* Bảng lỗi bước 4: mỗi dòng có hai ô chọn và một nút sửa tại chỗ. */
+table.bang-sua td { vertical-align: top; }
+table.bang-sua input[type=text] { width: 100%; min-width: 12rem; font-size: 0.8rem; }
+table.bang-sua td.phu { max-width: 36rem; }
+
+/* Thanh tiến độ ƯT1 ở bước 6 — nội dung chính của trang đối soát. */
+.hang-tien-do {
+  display: grid;
+  grid-template-columns: minmax(9rem, 20rem) 1fr 5rem 4rem;
+  gap: 0.7rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.nhan-tien-do { font-size: 0.9rem; }
+.so-tien-do { font-size: 0.85rem; color: var(--chu-phu); text-align: right; }
+.thanh-tien-do {
+  height: 0.7rem;
+  background: var(--vien);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.thanh-tien-do > span { display: block; height: 100%; background: var(--chinh); }
+
+/* Biểu mẫu thể thức ở bước 7: hai cột cho đỡ dài trang. */
+.luoi-doi { display: grid; grid-template-columns: repeat(2, minmax(15rem, 1fr)); gap: 0 1.2rem; }
+.luoi-doi .o-nhap { margin-bottom: 0.7rem; }
+/* Các ô này chứa chữ tiếng Việt chứ không phải đường dẫn: cho rộng hết cột và
+   dùng phông thường, chứ để mặc định thì tên cơ quan bị cắt mất một nửa. */
+.luoi-doi input[type=text] { width: 100%; font-family: inherit; font-size: 0.9rem; }
+select, textarea {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  font: inherit;
+  font-size: 0.9rem;
+  background: #fff;
+  width: 100%;
+}
+input[type=date] {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.danh-sach-tep { margin: 0.4rem 0 0.8rem 1.1rem; }
+.danh-sach-tep li { margin: 0.3rem 0; }
+
+@media (max-width: 40rem) {
+  .luoi-doi { grid-template-columns: 1fr; }
+  .hang-tien-do { grid-template-columns: 1fr 4rem; }
+  .hang-tien-do .thanh-tien-do { grid-column: 1 / -1; }
+}
+
+/* ------------------------------------------------- bước 0: mã tổ chức đảng */
+
+.nhom-ma {
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  padding: 0.8rem 1rem 1rem;
+  margin: 0 0 1.1rem;
+}
+.nhom-ma > legend { padding: 0 0.4rem; font-weight: 600; }
+
+.hang-ma { display: flex; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap; }
+.o-ma-nho { display: flex; flex-direction: column; gap: 0.2rem; }
+.o-ma-nho .nhan-nho { font-size: 0.8rem; color: var(--chu-phu); font-weight: 600; }
+.o-ma-nho input[type=text] {
+  /* Rộng đúng số chữ số nó chứa: ô 2 số mà kéo dài cả dòng thì người nhập
+     tưởng còn thiếu gì đó chưa gõ. */
+  width: 6.5rem;
+  text-align: center;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.o-ma-nho .phu { font-size: 0.78rem; }
+.hang-ma .cham {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--chu-phu);
+  align-self: center;
+  padding-top: 0.7rem;
+}
+.xem-truoc-ma {
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.8rem;
+  background: var(--nen);
+  border-radius: var(--bo-goc);
+  font-size: 0.9rem;
+}
+.xem-truoc-ma code { font-size: 1rem; font-weight: 600; color: var(--chinh); }
+
+@media (max-width: 34rem) {
+  .hang-ma .cham { display: none; }
+  .o-ma-nho { flex: 1 1 100%; }
+  .o-ma-nho input[type=text] { width: 100%; }
+}
+
+/* ------------------------------------------------------------- chân trang */
+
+.chan-trang {
+  max-width: 62rem;
+  margin: 2rem auto 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-top: 1px solid var(--vien);
+}
+.chan-ho-tro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.chan-trang .phu { flex: 1 1 22rem; font-size: 0.85rem; }
+
+.chan-ban-quyen {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--vien);
+  font-size: 0.85rem;
+  color: var(--chu-phu);
+}
+.chan-ban-quyen .dau-hieu { opacity: 0.75; flex: none; }
+.chan-ban-quyen.khong-vien { border-top: 0; margin-top: 0.4rem; padding-top: 0; }
+
+/* --------------------------------------------------------- trang hướng dẫn */
+
+.muc-luc { margin: 0 0 1.4rem; padding-left: 1.2rem; }
+.muc-luc li { margin: 0.25rem 0; }
+.khoi-huong-dan { scroll-margin-top: 1rem; }
+.khoi-huong-dan h3 { margin-top: 0; }
+.buoc-so {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem; height: 1.6rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: var(--chinh);
+  color: #fff;
+  font-size: 0.85rem;
+  vertical-align: -0.3rem;
+}
+.mach-nuoc {
+  margin: 0.7rem 0 0;
+  padding: 0.6rem 0.85rem;
+  background: var(--vang-nen);
+  border-left: 3px solid var(--vang);
+  border-radius: 0 var(--bo-goc) var(--bo-goc) 0;
+  font-size: 0.9rem;
+}
+.hinh-huong-dan {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.8rem 0 0.3rem;
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+}
+figure { margin: 0 0 1rem; }
+figcaption { font-size: 0.82rem; color: var(--chu-phu); }
+pre {
+  margin: 0.6rem 0;
+  padding: 0.8rem 1rem;
+  background: var(--nen);
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-goc);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+kbd {
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--vien);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--the);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.85em;
+}
+caption { text-align: left; padding: 0.3rem 0.55rem; }
+
+/* Người bật "giảm chuyển động" trong Windows: tắt hết chuyển tiếp. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------- thông báo */
+
+.hop-loi {
+  background: var(--do-nen);
+  border: 1px solid var(--do);
+  border-left: 4px solid var(--do);
+  border-radius: var(--bo-goc);
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 1.1rem;
+  white-space: pre-wrap;
+  color: #6b1410;
+}
+.canh-bao-do { color: var(--do); font-weight: 600; }
+.phu { color: var(--chu-phu); font-size: 0.88rem; }
+
+/* ------------------------------------------------ hộp thoại chọn thư mục */
+
+.lop-phu {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid; place-items: center;
+  padding: 1rem;
+  z-index: 50;
+}
+.lop-phu[hidden] { display: none; }
+.hop-thoai {
+  background: var(--the);
+  border-radius: var(--bo-goc);
+  width: min(680px, 100%);
+  max-height: 82vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.hop-dau {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--vien);
+}
+.hop-dau .dong { border: 0; background: none; font-size: 1.4rem; cursor: pointer; line-height: 1; color: var(--chu-phu); }
+.duong-dan-hien-tai {
+  padding: 0.5rem 1rem;
+  background: var(--nen);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+  border-bottom: 1px solid var(--vien);
+}
+.o-dia { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0.5rem 1rem; border-bottom: 1px solid var(--vien); }
+.o-dia button { padding: 0.25rem 0.6rem; font-size: 0.85rem; }
+.danh-sach {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  /* Cuộn hết danh sách rồi tiếp tục lăn chuột thì trang phía sau cuộn theo,
+     người dùng đóng hộp thoại ra thấy trang đã trôi đi đâu mất. */
+  overscroll-behavior: contain;
+  flex: 1;
+}
+.danh-sach li { border-bottom: 1px solid #eceef1; }
+.danh-sach button {
+  width: 100%; text-align: left;
+  padding: 0.45rem 1rem;
+  border: 0; background: none; font: inherit; cursor: pointer;
+}
+.danh-sach button:hover { background: var(--nen); }
+.danh-sach .la-tep { color: var(--xanh); }
+.hop-cuoi {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--vien);
+}
+.hop-cuoi .phu { margin-right: auto; }

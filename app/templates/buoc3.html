@@ -1,0 +1,136 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  Chọn thư mục gốc rồi xem trước những gì sắp xảy ra. App chỉ tạo thư mục,
+  <strong>không bao giờ xóa</strong>. Chạy lại nhiều lần vẫn an toàn.
+</p>
+
+<form id="bieu-mau" class="the">
+  <label class="o-nhap">
+    <span class="nhan">Thư mục gốc chứa toàn bộ hồ sơ</span>
+    <span class="mo-ta">
+      Nên chọn thư mục gần gốc ổ đĩa. Windows giới hạn đường dẫn 260 ký tự, mà tên
+      thư mục và tên tệp hồ sơ đảng viên đã chiếm tới 150 ký tự &mdash; đường dẫn gốc
+      phải ngắn hơn <strong>{{ nguong }} ký tự</strong>.
+    </span>
+    <span class="hang">
+      <input type="text" name="duong_dan_goc" id="duong_dan_goc"
+             value="{{ cau_hinh.duong_dan_goc }}" placeholder="D:\SoHoa\HSDV" autocomplete="off" spellcheck="false">
+      <button type="button" class="nut phu-nut"
+              onclick="moDuyet('duong_dan_goc', 'thu_muc')">Duyệt…</button>
+    </span>
+  </label>
+
+  <div class="hang-nut">
+    <button type="submit" class="nut phu-nut" id="nut-kiem">Xem trước</button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite"></span>
+  </div>
+</form>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div class="the ket-qua" id="xem-truoc" hidden>
+  <h3>Sắp thực hiện</h3>
+  <p class="phu" id="thong-bao-ngan-sach"></p>
+  <dl class="so-lieu" id="tom-tat"></dl>
+  <p class="canh-bao-do" id="canh-bao-loi" hidden></p>
+
+  <div class="hang-nut">
+    <button type="button" class="nut chinh" id="nut-tao">Tạo cây thư mục</button>
+    <span class="trang-thai" id="trang-thai-tao" aria-live="polite"></span>
+  </div>
+</div>
+
+{% if ke_hoach %}
+<details class="the">
+  <summary>Chi tiết {{ ke_hoach.muc | length }} thư mục cá nhân</summary>
+  <div class="cuon-ngang">
+  <table class="gon">
+    <thead>
+      <tr><th>ID</th><th>Họ và tên</th><th>Việc</th><th>Số tệp</th><th>Đường dẫn</th><th>Ghi chú</th></tr>
+    </thead>
+    <tbody>
+      {% for m in ke_hoach.muc %}
+      <tr class="hd-{{ m.hanh_dong }}">
+        <td><code>{{ m.id }}</code></td>
+        <td>{{ m.ho_ten }}</td>
+        <td>{{ m.nhan }}</td>
+        <td class="so">{{ m.so_tep_ben_trong or '' }}</td>
+        <td><code class="nho">{{ m.duong_dan_dich }}</code></td>
+        <td class="phu">{{ m.ghi_chu }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</details>
+{% endif %}
+
+<div class="the ket-qua" id="da-tao" hidden>
+  <h3>Đã tạo xong cây thư mục</h3>
+  <dl class="so-lieu" id="tom-tat-sau"></dl>
+  <a href="/buoc/4" class="nut chinh">Sang bước 4 &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+const NHAN = {
+  tao_moi: 'Tạo mới', da_co: 'Đã có, bỏ qua', doi_ten: 'Đổi tên cho đúng chuẩn',
+  chuyen_chi_bo: 'Chuyển sang chi bộ mới', loi: 'Lỗi, cần xử lý tay',
+};
+
+function veTomTat(dich, tomTat, donViMoi, donViDaCo) {
+  const hang = [];
+  if (donViMoi !== undefined) hang.push(['Thư mục chi bộ tạo mới', donViMoi]);
+  if (donViDaCo !== undefined) hang.push(['Thư mục chi bộ đã có', donViDaCo]);
+  for (const [k, v] of Object.entries(tomTat)) {
+    if (v > 0) hang.push([NHAN[k] || k, v]);
+  }
+  document.getElementById(dich).innerHTML =
+    hang.map(([k, v]) => `<div><dt>${k}</dt><dd>${soVN(v)}</dd></div>`).join('');
+}
+
+document.getElementById('bieu-mau').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('trang-thai');
+  an(document.getElementById('hop-loi'));
+  an(document.getElementById('xem-truoc'));
+  tt.textContent = 'Đang kiểm thư mục…';
+
+  const d = await goiApi('/api/buoc3/kiem', new FormData(e.target));
+  tt.textContent = '';
+  if (!d) return;
+
+  document.getElementById('thong-bao-ngan-sach').textContent = d.thong_bao;
+  veTomTat('tom-tat', d.tom_tat, d.don_vi_tao_moi, d.don_vi_da_co);
+
+  const cb = document.getElementById('canh-bao-loi');
+  if (d.co_loi) {
+    cb.textContent = 'Có dòng ở trạng thái Lỗi. App sẽ bỏ qua đúng những dòng đó '
+      + 'và vẫn tạo các thư mục còn lại. Mở phần chi tiết bên dưới để xem.';
+    hien(cb);
+  } else { an(cb); }
+
+  const nutTao = document.getElementById('nut-tao');
+  nutTao.disabled = !d.can_thay_doi;
+  document.getElementById('trang-thai-tao').textContent =
+    d.can_thay_doi ? '' : 'Không có gì để làm — cây thư mục đã đúng.';
+  hien(document.getElementById('xem-truoc'));
+});
+
+document.getElementById('nut-tao').addEventListener('click', async () => {
+  const nut = document.getElementById('nut-tao');
+  const tt = document.getElementById('trang-thai-tao');
+  nut.disabled = true;
+  tt.textContent = 'Đang tạo…';
+  const d = await goiApi('/api/buoc3/tao', new FormData());
+  tt.textContent = '';
+  if (!d) { nut.disabled = false; return; }
+  veTomTat('tom-tat-sau', d.tom_tat);
+  hien(document.getElementById('da-tao'));
+});
+</script>
+{% endblock %}

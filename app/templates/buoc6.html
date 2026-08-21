@@ -1,0 +1,166 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  App đọc thẳng cây thư mục trên đĩa nên kết quả luôn đúng với thực tế, kể cả
+  khi có người chép tay tệp vào kho. <strong>Chỉ tệp PDF ở kho chính</strong>
+  mới được tính là đạt chuẩn; tệp trong <code>_CHO_CHUYEN_PDF</code> vẫn nằm ở
+  cột chưa có.
+</p>
+
+<div class="the">
+  <p class="phu">Kho hồ sơ: <code class="nho">{{ cau_hinh.duong_dan_goc }}</code></p>
+  <div class="hang-nut">
+    <button type="button" class="nut phu-nut" id="nut-quet">Đối soát</button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite"></span>
+  </div>
+</div>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div id="ket-qua" hidden>
+  <section class="the">
+    <h3>Tiến độ ưu tiên 1</h3>
+    <p class="phu">
+      ƯT1 là 36 loại tài liệu gốc bắt buộc phải có trong hồ sơ đảng viên. Đây là
+      con số cần nhìn trước tiên; ƯT2 và ƯT3 làm sau.
+    </p>
+    <div id="thanh-tong"></div>
+    <dl class="so-lieu" id="tom-tat"></dl>
+    <p class="canh-bao-do" id="canh-bao" hidden></p>
+  </section>
+
+  <section class="the">
+    <h3>Theo từng chi bộ</h3>
+    <div id="cac-chi-bo"></div>
+  </section>
+
+  <details class="the">
+    <summary>Chi tiết từng đảng viên</summary>
+    <div class="cuon-ngang">
+      <table class="gon">
+        <thead>
+          <tr>
+            <th>ID</th><th>Họ và tên</th><th>Chi bộ</th>
+            <th>ƯT1</th><th>ƯT2</th><th>ƯT3</th>
+            <th>Chờ PDF</th><th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody id="than-dang-vien"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <section class="the">
+    <p class="phu">
+      Ghi kết quả vào sổ cái sẽ cập nhật 6 cột đối soát của <code>MAIN.xlsx</code>.
+      Mọi cột khác — nhất là <code>ID</code> và <code>Folder_name</code> — giữ nguyên.
+    </p>
+    <div class="hang-nut">
+      <button type="button" class="nut chinh" id="nut-ghi">Ghi kết quả vào MAIN.xlsx</button>
+      <span class="trang-thai" id="trang-thai-ghi" aria-live="polite"></span>
+    </div>
+  </section>
+</div>
+
+<div class="the ket-qua" id="da-ghi" hidden>
+  <h3>Đã cập nhật sổ cái</h3>
+  <p class="phu" id="ghi-chu-ghi"></p>
+  <a href="/buoc/7" class="nut chinh">Sang bước 7 &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+function o(the, lop, chu) {
+  const el = document.createElement(the);
+  if (lop) el.className = lop;
+  if (chu !== undefined) el.textContent = chu;
+  return el;
+}
+
+function thanhTienDo(nhan, td) {
+  const hang = o('div', 'hang-tien-do');
+  hang.appendChild(o('span', 'nhan-tien-do', nhan));
+  const thanh = o('div', 'thanh-tien-do');
+  const trong = o('span');
+  trong.style.width = Math.min(100, td.ti_le) + '%';
+  thanh.appendChild(trong);
+  hang.appendChild(thanh);
+  hang.appendChild(o('span', 'so-tien-do', `${td.co}/${td.tong}`));
+  hang.appendChild(o('span', 'so-tien-do', td.ti_le.toFixed(1) + '%'));
+  return hang;
+}
+
+document.getElementById('nut-quet').addEventListener('click', async () => {
+  const tt = document.getElementById('trang-thai');
+  an(document.getElementById('ket-qua'));
+  an(document.getElementById('da-ghi'));
+  tt.textContent = 'Đang đọc cây thư mục…';
+
+  const d = await goiApi('/api/buoc6/doi_soat', new FormData());
+  tt.textContent = '';
+  if (!d) return;
+
+  const khu = document.getElementById('thanh-tong');
+  khu.innerHTML = '';
+  khu.appendChild(thanhTienDo('Toàn bộ phạm vi', d.tien_do['1']));
+
+  document.getElementById('tom-tat').innerHTML = [
+    ['Đảng viên', d.so_dang_vien],
+    ['Tài liệu đạt chuẩn', d.tong_tep_da_co],
+    ['ƯT1', `${d.tien_do['1'].co}/${d.tien_do['1'].tong}`],
+    ['ƯT2', `${d.tien_do['2'].co}/${d.tien_do['2'].tong}`],
+    ['ƯT3', `${d.tien_do['3'].co}/${d.tien_do['3'].tong}`],
+    ['Chờ chuyển PDF', d.so_cho_chuyen_pdf],
+  ].map(([k, v]) => `<div><dt>${k}</dt><dd>${soVN(v)}</dd></div>`).join('');
+
+  const cb = document.getElementById('canh-bao');
+  cb.hidden = !d.thieu_thu_muc;
+  cb.textContent = d.thieu_thu_muc
+    ? `${d.thieu_thu_muc} đảng viên chưa có thư mục trên đĩa nên chưa đối soát được. `
+      + `Quay lại bước 3 tạo cây thư mục rồi đối soát lại.`
+    : '';
+
+  const khuCb = document.getElementById('cac-chi-bo');
+  khuCb.innerHTML = '';
+  d.chi_bo.forEach((c) => {
+    khuCb.appendChild(thanhTienDo(`${c.ma_id ? c.ma_id + ' · ' : ''}${c.ten}`, c.tien_do['1']));
+  });
+
+  const than = document.getElementById('than-dang-vien');
+  than.innerHTML = '';
+  d.dong.forEach((x) => {
+    const tr = o('tr', x.ghi_chu ? 'hd-loi' : null);
+    tr.appendChild(o('td', null, x.id));
+    tr.appendChild(o('td', null, x.ho_ten));
+    tr.appendChild(o('td', 'phu', x.chi_bo));
+    tr.appendChild(o('td', 'so', x.ut1));
+    tr.appendChild(o('td', 'so', x.ut2));
+    tr.appendChild(o('td', 'so', x.ut3));
+    tr.appendChild(o('td', 'so', x.cho_chuyen_pdf || ''));
+    tr.appendChild(o('td', 'phu', x.ghi_chu));
+    than.appendChild(tr);
+  });
+
+  hien(document.getElementById('ket-qua'));
+});
+
+document.getElementById('nut-ghi').addEventListener('click', async () => {
+  const nut = document.getElementById('nut-ghi');
+  const tt = document.getElementById('trang-thai-ghi');
+  nut.disabled = true;
+  tt.textContent = 'Đang ghi…';
+
+  const d = await goiApi('/api/buoc6/ghi', new FormData());
+  tt.textContent = '';
+  nut.disabled = false;
+  if (!d) return;
+
+  document.getElementById('ghi-chu-ghi').textContent =
+    `Đã cập nhật ${d.so_dong} dòng trong ${d.da_ghi}`;
+  hien(document.getElementById('da-ghi'));
+});
+</script>
+{% endblock %}

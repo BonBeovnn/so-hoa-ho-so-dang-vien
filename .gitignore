@@ -1,0 +1,60 @@
+# =============================================================================
+# DỮ LIỆU CÁ NHÂN — TUYỆT ĐỐI KHÔNG ĐẨY LÊN GITHUB
+# =============================================================================
+# app/data/ chứa tệp do chính app sinh ra khi chạy thật:
+#   manifest_*.csv  — có đường dẫn đích, tức là có SỐ CCCD trong tên thư mục
+#   app.log         — nhật ký vận hành
+#   cau_hinh.json   — đường dẫn ổ đĩa thật của cơ quan
+# Chặn cả thư mục rồi mở lại đúng tệp danh mục — thứ duy nhất phải có trong kho.
+app/data/*
+!app/data/danh_muc_file.json
+
+# Sổ cái, danh sách đảng viên, báo cáo đã xuất — dù nằm ở đâu cũng chặn.
+*.xlsx
+*.xlsm
+*.xls
+*.docx
+*.doc
+*.pdf
+*.csv
+*.log
+GoiChanDoan_*.zip
+
+# =============================================================================
+# MÔI TRƯỜNG VÀ TỆP TẠM
+# =============================================================================
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.dangchep
+
+# Gói bánh xe cài ngoại tuyến: 29 tệp .whl, gần 10 MB, và chỉ chạy được với
+# đúng một phiên bản Python. Người khác nên tự tải theo requirements.txt.
+vendor/
+
+# Kết quả đóng gói bằng packaging/build.bat: tệp .exe ~28 MB và thư mục làm
+# việc của PyInstaller. Ai cần thì tự chạy build.bat — không hợp lý để một tệp
+# nhị phân 28 MB nằm trong lịch sử Git.
+packaging/build/
+packaging/dist/
+packaging/*.spec
+*.exe
+
+# =============================================================================
+# HỆ ĐIỀU HÀNH VÀ TRÌNH SOẠN THẢO
+# =============================================================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~

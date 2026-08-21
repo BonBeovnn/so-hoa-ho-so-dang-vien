@@ -1,0 +1,242 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  App chỉ <strong>đọc</strong> thư mục scan để phân loại. Không tệp nào bị đổi tên,
+  di chuyển hay xóa ở bước này &mdash; việc chép sang kho nằm ở bước 5.
+</p>
+
+<form id="bieu-mau" class="the">
+  <label class="o-nhap">
+    <span class="nhan">Thư mục chứa tệp scan</span>
+    <span class="mo-ta">
+      Tên tệp chỉ cần ba phần <code translate="no">[Chi bộ].[ID].[Mã tài liệu]</code>
+      &mdash; ví dụ <code translate="no">A.ID01.65.pdf</code>. Bỏ tiền tố chi bộ cũng
+      được (<code translate="no">ID01.65.pdf</code>); thêm số thứ tự ở cuối cũng được
+      (<code translate="no">A.ID01.65.1.pdf</code>), không thêm thì app tự cấp số nối
+      tiếp. App quét cả thư mục con.
+    </span>
+    <span class="hang">
+      <input type="text" name="duong_dan_scan" id="duong_dan_scan"
+             value="{{ cau_hinh.duong_dan_scan }}" placeholder="D:\Scan\Dot1" autocomplete="off" spellcheck="false">
+      <button type="button" class="nut phu-nut"
+              onclick="moDuyet('duong_dan_scan', 'thu_muc')">Duyệt…</button>
+    </span>
+  </label>
+
+  <div class="hang-nut">
+    <button type="submit" class="nut phu-nut" id="nut-quet">Quét thư mục</button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite"></span>
+  </div>
+</form>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div id="ket-qua" hidden>
+  <section class="the">
+    <h3>Kết quả quét</h3>
+    <dl class="so-lieu" id="tom-tat"></dl>
+    <p class="phu" id="ghi-chu"></p>
+    <div class="hang-nut">
+      <a class="nut phu-nut" id="nut-xuat" href="/api/buoc4/xuat_loi" hidden>Xuất bảng lỗi (.xlsx)</a>
+      <a class="nut chinh" href="/buoc/5">Sang bước 5 &rarr;</a>
+    </div>
+  </section>
+
+  <section class="the" id="khu-loi" hidden>
+    <h3>Bảng lỗi &mdash; sửa ngay tại đây</h3>
+    <p class="phu">
+      Chọn đúng đảng viên và loại tài liệu rồi bấm <strong>Sửa</strong>. Gõ vài chữ
+      để tìm. App chỉ đặt tên cho <strong>bản sao</strong> ở kho &mdash; tệp gốc
+      trong thư mục scan giữ nguyên tên cũ.
+    </p>
+    <div class="cuon-ngang">
+      <table class="gon bang-sua">
+        <thead>
+          <tr>
+            <th>Tệp</th><th>Vấn đề và cách sửa</th>
+            <th>Đảng viên</th><th>Loại tài liệu</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="than-loi"></tbody>
+      </table>
+    </div>
+    <p class="phu" id="con-lai" hidden></p>
+  </section>
+
+  <section class="the" id="khu-canh-bao" hidden>
+    <h3>Cảnh báo &mdash; không chặn, chỉ để biết</h3>
+    <div class="cuon-ngang">
+      <table class="gon">
+        <thead><tr><th>Tệp</th><th>Nội dung cảnh báo</th></tr></thead>
+        <tbody id="than-canh-bao"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<datalist id="ds-dang-vien"></datalist>
+<datalist id="ds-tai-lieu"></datalist>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+let TEN_LOI = {};
+
+function napDanhSach(id, cac_muc) {
+  const dl = document.getElementById(id);
+  dl.innerHTML = '';
+  for (const m of cac_muc) {
+    const o = document.createElement('option');
+    o.value = m;
+    dl.appendChild(o);
+  }
+}
+
+function o(the, lop, chu) {
+  const el = document.createElement(the);
+  if (lop) el.className = lop;
+  if (chu !== undefined) el.textContent = chu;   // luôn textContent: tên tệp là dữ liệu lạ
+  return el;
+}
+
+function dongLoi(t) {
+  const tr = o('tr', 'hd-loi');
+
+  const tdTep = o('td');
+  tdTep.appendChild(o('code', 'nho', t.ten_goc));
+  tr.appendChild(tdTep);
+
+  const tdVanDe = o('td', 'phu');
+  tdVanDe.appendChild(o('strong', null, TEN_LOI[t.ma_loi] || t.ma_loi));
+  tdVanDe.appendChild(document.createElement('br'));
+  tdVanDe.appendChild(document.createTextNode(t.thong_bao));
+  tr.appendChild(tdVanDe);
+
+  const oNguoi = document.createElement('input');
+  oNguoi.type = 'text';
+  oNguoi.setAttribute('list', 'ds-dang-vien');
+  oNguoi.placeholder = 'Gõ tên hoặc mã ID';
+  // Chỉ điền sẵn khi TRA RA được người thật. Lỗi E02 vẫn có id_dang_vien
+  // (chính cái mã sai), điền vào là mời người dùng bấm Sửa với mã sai đó.
+  oNguoi.value = t.ten_dang_vien ? `${t.id_dang_vien} — ${t.ten_dang_vien}` : '';
+  const tdNguoi = o('td');
+  tdNguoi.appendChild(oNguoi);
+  tr.appendChild(tdNguoi);
+
+  const oTaiLieu = document.createElement('input');
+  oTaiLieu.type = 'text';
+  oTaiLieu.setAttribute('list', 'ds-tai-lieu');
+  oTaiLieu.placeholder = 'Gõ tên loại tài liệu';
+  const tdTaiLieu = o('td');
+  tdTaiLieu.appendChild(oTaiLieu);
+  tr.appendChild(tdTaiLieu);
+
+  const nut = o('button', 'nut phu-nut', 'Sửa');
+  nut.type = 'button';
+  const tdNut = o('td');
+  tdNut.appendChild(nut);
+  tr.appendChild(tdNut);
+
+  nut.addEventListener('click', async () => {
+    const maId = (oNguoi.value.match(/ID\s*(\d+)/i) || [])[0];
+    const maTaiLieu = (oTaiLieu.value.match(/^\s*(\d{1,3})/) || [])[1];
+    if (!maId || !maTaiLieu) {
+      nut.textContent = 'Chọn đủ hai ô';
+      setTimeout(() => { nut.textContent = 'Sửa'; }, 2000);
+      return;
+    }
+    nut.disabled = true;
+    const d = await goiApi('/api/buoc4/sua', {
+      duong_dan: t.duong_dan,
+      id_dang_vien: maId.replace(/\s+/g, ''),
+      ma_tai_lieu: Number(maTaiLieu),
+    });
+    nut.disabled = false;
+    if (!d) return;
+
+    const moi = o('tr', 'hd-doi_ten');
+    const c1 = o('td');
+    c1.appendChild(o('code', 'nho', t.ten_goc));
+    moi.appendChild(c1);
+    const c2 = o('td', 'phu');
+    c2.colSpan = 4;
+    c2.textContent = `Đã sửa — bản sao sẽ mang tên của ${d.tep.id_dang_vien} `
+      + `(${d.tep.ten_dang_vien}), loại tài liệu ${d.tep.ma_tai_lieu}. `
+      + `Tệp gốc giữ nguyên tên.`;
+    moi.appendChild(c2);
+    tr.replaceWith(moi);
+    capNhatConLoi(d.so_loi_con_lai, d.so_hop_le);
+  });
+
+  return tr;
+}
+
+function capNhatConLoi(soLoi, soHopLe) {
+  const dl = document.getElementById('tom-tat');
+  for (const div of dl.children) {
+    const ten = div.querySelector('dt').textContent;
+    if (ten === 'Lỗi phải xử lý') div.querySelector('dd').textContent = soLoi;
+    if (ten === 'Hợp lệ') div.querySelector('dd').textContent = soHopLe;
+  }
+}
+
+document.getElementById('bieu-mau').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('trang-thai');
+  an(document.getElementById('ket-qua'));
+  tt.textContent = 'Đang quét…';
+
+  const d = await goiApi('/api/buoc4/quet', new FormData(e.target));
+  tt.textContent = '';
+  if (!d) return;
+
+  TEN_LOI = d.ten_loi;
+  napDanhSach('ds-dang-vien', d.dang_vien.map((x) => `${x.id} — ${x.ten}`));
+  napDanhSach('ds-tai-lieu', d.tai_lieu.map(
+    (x) => `${String(x.ma).padStart(3, '0')} — ${x.ten} (ƯT${x.uu_tien})`));
+
+  document.getElementById('tom-tat').innerHTML = [
+    ['Tổng số tệp', d.tong],
+    ['Hợp lệ', d.so_hop_le],
+    ['Lỗi phải xử lý', d.so_loi],
+    ['Có cảnh báo', d.so_canh_bao],
+  ].map(([k, v]) => `<div><dt>${k}</dt><dd>${soVN(v)}</dd></div>`).join('');
+
+  const theoMa = Object.entries(d.tom_tat_loi)
+    .map(([ma, so]) => `${so} tệp ${(d.ten_loi[ma] || ma).toLowerCase()}`).join(' · ');
+  document.getElementById('ghi-chu').textContent = d.so_loi
+    ? `Tệp lỗi ở lại nguyên chỗ cũ, không chặn các tệp còn lại: ${theoMa}.`
+    : 'Không có tệp nào lỗi. Sang bước 5 để xem trước rồi chép.';
+
+  const than = document.getElementById('than-loi');
+  than.innerHTML = '';
+  d.dong_loi.forEach((t) => than.appendChild(dongLoi(t)));
+  document.getElementById('khu-loi').hidden = d.so_loi === 0;
+  document.getElementById('nut-xuat').hidden = d.so_loi === 0;
+
+  const conLai = document.getElementById('con-lai');
+  conLai.hidden = !d.con_lai;
+  conLai.textContent = d.con_lai
+    ? `Còn ${d.con_lai} dòng lỗi nữa không hiện ở đây cho khỏi nặng trình duyệt. `
+      + `Bấm "Xuất bảng lỗi" để xem đủ.`
+    : '';
+
+  const thanCb = document.getElementById('than-canh-bao');
+  thanCb.innerHTML = '';
+  d.dong_canh_bao.forEach((t) => {
+    const tr = o('tr');
+    const c1 = o('td');
+    c1.appendChild(o('code', 'nho', t.ten_goc));
+    tr.appendChild(c1);
+    const c2 = o('td', 'phu', t.canh_bao.map((c) => c.cau).join(' '));
+    tr.appendChild(c2);
+    thanCb.appendChild(tr);
+  });
+  document.getElementById('khu-canh-bao').hidden = d.dong_canh_bao.length === 0;
+
+  hien(document.getElementById('ket-qua'));
+});
+</script>
+{% endblock %}

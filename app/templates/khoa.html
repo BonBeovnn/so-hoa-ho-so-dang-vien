@@ -1,0 +1,11 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+<div class="the">
+  <h3>Chưa mở được bước này</h3>
+  <p>
+    Các bước phải làm theo thứ tự vì bước sau dùng kết quả của bước trước.
+    Hãy hoàn thành <strong>bước {{ buoc_can_lam }} &mdash; {{ ten_buoc[buoc_can_lam] }}</strong> trước.
+  </p>
+  <a href="/buoc/{{ buoc_can_lam }}" class="nut chinh">Về bước {{ buoc_can_lam }} &rarr;</a>
+</div>
+{% endblock %}

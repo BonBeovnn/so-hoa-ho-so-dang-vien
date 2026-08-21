@@ -1,0 +1,168 @@
+{% extends "co_so.html" %}
+{% block tieu_de %}Bước 0 &mdash; Thông tin đơn vị{% endblock %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  App không gắn cứng với đơn vị nào. Hai thông tin dưới đây quyết định
+  <strong>tên in trên báo cáo</strong> và <strong>tên thư mục gốc của cả cây hồ sơ</strong>,
+  nên phải khai trước khi làm bất cứ bước nào khác. Khai một lần, lần mở sau app điền sẵn.
+</p>
+
+<form id="bieu-mau-don-vi" class="the">
+  <h3>1. Tên đảng bộ</h3>
+
+  <label class="o-nhap" for="ten_dang_bo">
+    <span class="nhan">Tên đảng bộ đang số hóa hồ sơ <span class="bat-buoc" aria-hidden="true">*</span></span>
+    <span class="mo-ta">
+      Ghi đúng như trong con dấu. Tên này in lên báo cáo <code>.docx</code>, phụ lục
+      <code>.xlsx</code> và tiêu đề mọi trang. Ví dụ: Đảng bộ Viện Nông nghiệp Thanh Hóa.
+    </span>
+    <span class="hang">
+      <input type="text" name="ten_dang_bo" id="ten_dang_bo" class="chu-thuong"
+             value="{{ cau_hinh.ten_dang_bo }}" required autocomplete="organization"
+             spellcheck="false" placeholder="Đảng bộ Viện Nông nghiệp Thanh Hóa">
+    </span>
+  </label>
+
+  <label class="o-nhap" for="ten_cap_tren">
+    <span class="nhan">Đảng bộ cấp trên trực tiếp</span>
+    <span class="mo-ta">
+      Dùng làm dòng cơ quan chủ quản ở đầu văn bản và dòng đầu của mục Nơi nhận.
+      Để trống thì báo cáo không có dòng chủ quản.
+    </span>
+    <span class="hang">
+      <input type="text" name="ten_cap_tren" id="ten_cap_tren" class="chu-thuong"
+             value="{{ cau_hinh.ten_cap_tren }}" autocomplete="off" spellcheck="false"
+             placeholder="Đảng bộ Ủy ban nhân dân tỉnh Thanh Hóa">
+    </span>
+  </label>
+
+  <label class="o-nhap" for="dia_danh">
+    <span class="nhan">Địa danh ghi trên văn bản</span>
+    <span class="mo-ta">
+      Phần đứng trước ngày tháng: &ldquo;<em>Thanh Hóa, ngày 21 tháng 8 năm 2026</em>&rdquo;.
+    </span>
+    <span class="hang">
+      <input type="text" name="dia_danh" id="dia_danh" class="chu-thuong hep"
+             value="{{ cau_hinh.dia_danh or dia_danh_mac_dinh }}" autocomplete="off"
+             spellcheck="false" placeholder="{{ dia_danh_mac_dinh }}">
+    </span>
+  </label>
+
+  <h3>2. Mã tổ chức đảng của đảng bộ cơ sở</h3>
+  <p class="phu">
+    Theo Quy định 208-QĐ/TW mã chi bộ có 5 nhóm số <code translate="no">[2].[3].[3].[3].[3]</code>.
+    Ba nhóm đầu là mã <strong>đảng bộ cơ sở</strong> &mdash; chính là tên thư mục cấp trên cùng
+    của cả cây hồ sơ, và là phần khai ở đây. Hai nhóm cuối là của từng chi bộ, khai ở bước 1.
+  </p>
+
+  <fieldset class="nhom-ma">
+    <legend class="nhan">Mã đảng bộ cơ sở <span class="bat-buoc" aria-hidden="true">*</span></legend>
+
+    <div class="hang-ma">
+      <label class="o-ma-nho">
+        <span class="nhan-nho">M1 &mdash; đảng bộ tỉnh</span>
+        <input type="text" name="ma_tinh" id="ma_tinh" inputmode="numeric" maxlength="2"
+               value="{{ cau_hinh.ma_tinh or ma_tinh_mac_dinh }}" autocomplete="off"
+               spellcheck="false" translate="no" aria-describedby="gt-ma-tinh">
+        <span class="phu" id="gt-ma-tinh">{{ ma_tinh_mac_dinh }} = Thanh Hóa</span>
+      </label>
+
+      <span class="cham" aria-hidden="true">.</span>
+
+      <label class="o-ma-nho">
+        <span class="nhan-nho">M2 &mdash; cấp trên cơ sở</span>
+        <input type="text" name="ma_cap_tren" id="ma_cap_tren" inputmode="numeric" maxlength="3"
+               value="{{ cau_hinh.ma_cap_tren or ma_cap_tren_mac_dinh }}" autocomplete="off"
+               spellcheck="false" translate="no" aria-describedby="gt-ma-cap-tren">
+        <span class="phu" id="gt-ma-cap-tren">{{ ma_cap_tren_mac_dinh }} = Đảng ủy UBND tỉnh</span>
+      </label>
+
+      <span class="cham" aria-hidden="true">.</span>
+
+      <label class="o-ma-nho">
+        <span class="nhan-nho">M3 &mdash; đảng bộ cơ sở</span>
+        <input type="text" name="ma_co_so" id="ma_co_so" inputmode="numeric" maxlength="3"
+               value="{{ cau_hinh.ma_co_so }}" required autocomplete="off"
+               spellcheck="false" translate="no" placeholder="053"
+               aria-describedby="gt-ma-co-so">
+        <span class="phu" id="gt-ma-co-so">Mã riêng của đơn vị anh</span>
+      </label>
+    </div>
+
+    <p class="xem-truoc-ma">
+      Thư mục gốc sẽ là <code id="xem-ma-co-so" translate="no">&mdash;</code>,
+      mã chi bộ sẽ có dạng <code id="xem-ma-chi-bo" translate="no">&mdash;</code>.
+    </p>
+  </fieldset>
+
+  <div class="hang-nut">
+    <button type="submit" class="nut chinh" id="nut-luu">Lưu Thông Tin Đơn Vị</button>
+    <span class="trang-thai" id="tt-luu" aria-live="polite"></span>
+  </div>
+</form>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div class="the ket-qua" id="ket-qua" hidden>
+  <h3>Đã ghi nhận đơn vị</h3>
+  <dl class="so-lieu" id="so-lieu"></dl>
+  <p id="canh-bao-dat-lai" class="canh-bao-do" hidden></p>
+  <a href="/buoc/1" class="nut chinh">Sang Bước 1: Nạp Dữ Liệu &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+const oMa = ['ma_tinh', 'ma_cap_tren', 'ma_co_so'].map((id) => document.getElementById(id));
+const doDai = [2, 3, 3];
+
+/* Xem trước ngay khi gõ: người vận hành thấy đúng chuỗi sắp thành tên thư mục,
+   không phải suy ra trong đầu rồi mới phát hiện sai sau khi cây đã tạo. */
+function veXemTruoc() {
+  const so = oMa.map((o, i) => (o.value.replace(/\D/g, '') || '').padStart(doDai[i], '0'));
+  const dayDu = oMa.every((o) => o.value.replace(/\D/g, ''));
+  document.getElementById('xem-ma-co-so').textContent = dayDu ? so.join('.') : '—';
+  document.getElementById('xem-ma-chi-bo').textContent = dayDu ? so.join('.') + '.000.001' : '—';
+}
+oMa.forEach((o) => o.addEventListener('input', veXemTruoc));
+veXemTruoc();
+
+document.getElementById('bieu-mau-don-vi').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('tt-luu');
+  an(document.getElementById('ket-qua'));
+  tt.textContent = 'Đang lưu…';
+
+  const d = await goiApi('/api/buoc0/luu', new FormData(e.target));
+  tt.textContent = '';
+  if (!d) return;
+
+  /* Dựng bằng textContent chứ không nối chuỗi HTML: tên đảng bộ là chữ người
+     dùng gõ vào, nối thẳng vào innerHTML là mở đường cho XSS. */
+  const soLieu = document.getElementById('so-lieu');
+  soLieu.replaceChildren();
+  [['Đảng bộ', d.ten_dang_bo],
+   ['Thư mục gốc', d.ma_dang_bo_co_so],
+   ['Mẫu mã chi bộ', d.mau_ma_chi_bo]].forEach(([nhan, giaTri]) => {
+    const o = document.createElement('div');
+    const dt = document.createElement('dt');
+    const dd = document.createElement('dd');
+    dt.textContent = nhan;
+    dd.textContent = giaTri;
+    dd.className = 'chu-vua';
+    o.append(dt, dd);
+    soLieu.appendChild(o);
+  });
+
+  const cb = document.getElementById('canh-bao-dat-lai');
+  if (d.da_dat_lai) {
+    cb.textContent = 'Mã đảng bộ cơ sở đã đổi nên cây thư mục cũ không còn khớp. '
+      + 'App đã xóa dấu hoàn thành của các bước sau; làm lại từ bước 1.';
+    hien(cb);
+  } else { an(cb); }
+  hien(document.getElementById('ket-qua'));
+});
+</script>
+{% endblock %}

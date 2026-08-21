@@ -1,0 +1,343 @@
+{% extends "co_so.html" %}
+{% block tieu_de %}Hướng dẫn sử dụng &mdash; {{ ten_ung_dung }}{% endblock %}
+
+{% block tieu_de_trang %}
+<h2 class="tieu-de-buoc">Hướng dẫn sử dụng</h2>
+{% endblock %}
+
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  Tài liệu này trình bày đầy đủ chức năng của ứng dụng, sắp xếp theo đúng trình tự
+  công việc mà anh/chị sẽ thực hiện. Mỗi mục nêu rõ ba thông tin:
+  <strong>ứng dụng thực hiện thao tác gì</strong>, <strong>dữ liệu được ghi vào đâu
+  trên đĩa</strong>, và <strong>những tình huống dễ phát sinh sai sót</strong>.
+  Trang hướng dẫn này hoạt động hoàn toàn ngoại tuyến, không yêu cầu kết nối Internet.
+</p>
+
+<nav class="the" aria-labelledby="muc-luc-tieu-de">
+  <h3 id="muc-luc-tieu-de">Mục lục</h3>
+  <ol class="muc-luc">
+    <li><a href="#nguyen-tac">Ba nguyên tắc không bao giờ phá</a></li>
+    <li><a href="#b0">Bước 0 &mdash; Thông tin đơn vị</a></li>
+    <li><a href="#b1">Bước 1 &mdash; Nạp dữ liệu</a></li>
+    <li><a href="#b2">Bước 2 &mdash; Duyệt dữ liệu và ghi sổ cái</a></li>
+    <li><a href="#b3">Bước 3 &mdash; Tạo cây thư mục</a></li>
+    <li><a href="#b4">Bước 4 &mdash; Quét tệp scan</a></li>
+    <li><a href="#b5">Bước 5 &mdash; Luân chuyển tệp</a></li>
+    <li><a href="#b6">Bước 6 &mdash; Đối soát</a></li>
+    <li><a href="#b7">Bước 7 &mdash; Báo cáo</a></li>
+    <li><a href="#dat-ten">Quy tắc đặt tên tệp scan</a></li>
+    <li><a href="#ma-loi">Bảng mã lỗi và cảnh báo</a></li>
+    <li><a href="#tien-ich">Tiện ích dùng chung</a></li>
+    <li><a href="#rieng-tu">Dữ liệu cá nhân và quyền riêng tư</a></li>
+    <li><a href="#gioi-thieu">Giới thiệu và bản quyền</a></li>
+  </ol>
+</nav>
+
+<section class="the khoi-huong-dan" id="nguyen-tac">
+  <h3>Ba nguyên tắc không bao giờ phá</h3>
+  <ol>
+    <li>
+      <strong>Chỉ chép, không bao giờ đụng tệp gốc.</strong> Thư mục scan sau khi
+      chạy vẫn nguyên như trước. Chạy sai thì xóa thư mục đích rồi chạy lại.
+    </li>
+    <li>
+      <strong>Xem trước rồi mới thực thi.</strong> Mọi bước ghi lên đĩa đều có nút
+      <em>Xem trước</em> riêng. Xem trước không ghi một byte nào.
+    </li>
+    <li>
+      <strong>Không đoán thay người dùng.</strong> Gặp mâu thuẫn &mdash; hai thư mục
+      cùng tồn tại, tệp trùng tên khác nội dung &mdash; app dừng lại và báo, không tự
+      gộp, không tự ghi đè.
+    </li>
+  </ol>
+</section>
+
+<section class="the khoi-huong-dan" id="b0">
+  <h3><span class="buoc-so" aria-hidden="true">0</span>Bước 0 &mdash; Thông tin đơn vị</h3>
+  <p>
+    Khai <strong>tên đảng bộ</strong> và <strong>mã đảng bộ cơ sở</strong>. App không
+    gắn cứng với đơn vị nào: đây là chỗ duy nhất quyết định tên in trên báo cáo và
+    tên thư mục gốc của cả cây hồ sơ.
+  </p>
+  <p>
+    Mã đảng bộ cơ sở gồm ba nhóm số <code translate="no">[2].[3].[3]</code>. Hai nhóm
+    đầu điền sẵn <code translate="no">38</code> (Thanh Hóa) và
+    <code translate="no">168</code> (Đảng ủy UBND tỉnh) vì cả tỉnh dùng chung; nhóm
+    thứ ba là mã riêng của đơn vị. Đơn vị ngoài phạm vi đó sửa lại cả ba nhóm.
+  </p>
+  <p class="phu"><strong>Ghi lên đĩa:</strong> <code>app/data/cau_hinh.json</code>. Không đụng tới hồ sơ.</p>
+  <p class="mach-nuoc">
+    Thay đổi mã đảng bộ cơ sở sau khi đã tạo cây thư mục đồng nghĩa với việc đổi
+    gốc của toàn bộ cây. App sẽ tự động xóa dấu hoàn thành của các bước sau và yêu
+    cầu thực hiện lại từ Bước 1. Cây thư mục cũ trên đĩa vẫn được giữ nguyên, việc
+    giữ lại hay xóa đi do anh/chị tự quyết định.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="b1">
+  <h3><span class="buoc-so" aria-hidden="true">1</span>Bước 1 &mdash; Nạp dữ liệu</h3>
+  <p>
+    Chọn tệp <code>DS_DANGVIEN.xlsx</code> do hệ thống quản lý đảng viên cấp trên
+    xuất ra. App <strong>chỉ đọc</strong> tệp này, không bao giờ sửa.
+  </p>
+  <p>
+    Sổ cái <code>MAIN.xlsx</code> <strong>được tạo ra từ</strong> danh sách gốc, chứ
+    không phải chọn từ một tệp mẫu có sẵn. App tự rút danh sách chi bộ ngay trong
+    danh sách gốc, tự cấp mã chữ cái (A, B, C&hellip;) cho từng chi bộ; sau đó
+    anh/chị điền tiếp mã tổ chức đảng đầy đủ cho từng chi bộ đó.
+  </p>
+  <p>
+    Nếu thư mục đích đã có <code>MAIN.xlsx</code> cũ, app đọc nó làm sổ cái cũ và
+    <strong>giữ nguyên mọi mã ID đã cấp</strong> &mdash; mã ID nằm trong tên tệp scan,
+    đổi là hỏng dữ liệu.
+  </p>
+  <p class="phu"><strong>Ghi lên đĩa:</strong> chưa ghi gì. Bước 2 mới ghi.</p>
+  <p class="mach-nuoc">
+    App từ chối mã chi bộ không thuộc đảng bộ cơ sở đã khai ở bước 0. Gõ nhầm một
+    chữ số ở nhóm giữa sẽ đẩy cả chi bộ sang một cây thư mục khác, và lỗi đó chỉ lộ
+    ra sau khi tệp đã chép vào sai chỗ.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="b2">
+  <h3><span class="buoc-so" aria-hidden="true">2</span>Bước 2 &mdash; Duyệt dữ liệu và ghi sổ cái</h3>
+  <p>
+    Xem bảng đối chiếu trước khi ghi: đảng viên thêm mới, đảng viên không còn trong
+    danh sách, dòng dữ liệu bẩn cần sửa, cảnh báo và lỗi chặn.
+  </p>
+  <p>
+    <strong>Lỗi chặn</strong> phải xử lý xong mới ghi được sổ cái. Cảnh báo thì không
+    chặn &mdash; ví dụ đảng viên thiếu số CCCD vẫn được tạo thư mục, chỉ là tên thư mục
+    không có phần số.
+  </p>
+  <p class="phu">
+    <strong>Ghi lên đĩa:</strong> <code>MAIN.xlsx</code> với 19 cột. Bản cũ được giữ lại
+    thành bản sao lưu xoay vòng, tối đa 5 bản.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="b3">
+  <h3><span class="buoc-so" aria-hidden="true">3</span>Bước 3 &mdash; Tạo cây thư mục</h3>
+  <p>Chọn thư mục gốc. App dựng cây bốn cấp:</p>
+  <div class="cuon-ngang">
+    <pre translate="no"><code>&lt;thư mục gốc&gt;
+└── 38.168.053                          đảng bộ cơ sở (app tự sinh)
+    └── 38.168.053.000.001              chi bộ, giữ nguyên dấu chấm
+        └── 099001110001_NguyenVanA     đảng viên: số CCCD _ họ tên không dấu
+            └── _CHO_CHUYEN_PDF         kho chờ, chỉ tạo khi có tệp ngoài PDF</code></pre>
+  </div>
+  <p>
+    Trước khi tạo, app đo <strong>ngân sách độ dài đường dẫn</strong>. Windows giới hạn
+    260 ký tự; thư mục gốc quá sâu thì tên tệp dài nhất sẽ vượt và Explorer không mở
+    được. App báo con số cụ thể và từ chối chạy thay vì tạo ra một cây hỏng.
+  </p>
+  <p>
+    Bốn tình huống app phân biệt: tạo mới &middot; đã có &middot; đổi tên cho đúng chuẩn
+    &middot; chuyển chi bộ (mang cả tệp bên trong theo).
+  </p>
+  <p class="phu"><strong>Ghi lên đĩa:</strong> chỉ tạo thư mục rỗng, không tạo tệp nào.</p>
+</section>
+
+<section class="the khoi-huong-dan" id="b4">
+  <h3><span class="buoc-so" aria-hidden="true">4</span>Bước 4 &mdash; Quét tệp scan</h3>
+  <p>
+    Chọn thư mục chứa tệp scan (kể cả thư mục con). App đọc tên từng tệp, tra vào sổ
+    cái và danh mục {{ so_loai_tai_lieu }} loại tài liệu, rồi chấm lỗi.
+  </p>
+  <p>
+    Tệp sai tên <strong>không phải đổi tay</strong>: chọn đúng đảng viên và loại tài
+    liệu ở hai ô ngay trên dòng lỗi rồi bấm <em>Sửa</em>. App chỉ đặt tên đúng cho
+    <strong>bản sao</strong>; tệp gốc trong thư mục scan không hề bị đổi tên.
+  </p>
+  <p>Nút <em>Xuất bảng lỗi</em> cho ra tệp <code>.xlsx</code> để mang đi đối chiếu với người scan.</p>
+  <p class="phu"><strong>Ghi lên đĩa:</strong> không ghi gì.</p>
+</section>
+
+<section class="the khoi-huong-dan" id="b5">
+  <h3><span class="buoc-so" aria-hidden="true">5</span>Bước 5 &mdash; Luân chuyển tệp</h3>
+  <p>
+    <em>Xem trước</em> cho biết từng tệp sẽ đi đâu, mang tên gì, chiếm bao nhiêu dung
+    lượng, và ổ đĩa còn đủ chỗ không. Chưa ghi gì lên đĩa.
+  </p>
+  <p>
+    App so <strong>nội dung</strong> tệp bằng SHA-256 chứ không so tên: chạy lại lần
+    hai trên cùng thư mục scan sẽ nhận ra bản đã chép và bỏ qua, không nhân đôi tệp.
+  </p>
+  <p>
+    Tệp PDF vào thư mục đảng viên; tệp <code>.doc</code>, <code>.docx</code>,
+    <code>.jpg</code>, <code>.png</code> vào thư mục con <code>_CHO_CHUYEN_PDF</code>.
+    Chúng vẫn được đặt tên đúng chuẩn, chỉ là chưa tính vào kết quả đạt chuẩn lưu trữ.
+  </p>
+  <p class="phu">
+    <strong>Ghi lên đĩa:</strong> chép tệp (chép ra tên tạm rồi mới đổi tên, đứt điện
+    giữa chừng không tạo ra tệp méo), và ghi <code>manifest_&lt;thời điểm&gt;.csv</code>
+    ghi lại từng tệp đã xử lý.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="b6">
+  <h3><span class="buoc-so" aria-hidden="true">6</span>Bước 6 &mdash; Đối soát</h3>
+  <p>
+    App đi hết cây thư mục, đọc tên tệp thật đang có, đối chiếu với danh mục
+    {{ so_loai_tai_lieu }} loại tài liệu chia ba mức ưu tiên, rồi tính tiến độ cho
+    từng đảng viên, từng chi bộ và toàn đảng bộ.
+  </p>
+  <p class="phu">
+    <strong>Ghi lên đĩa:</strong> 6 cột đối soát trong <code>MAIN.xlsx</code> &mdash;
+    <code>Tai_lieu_da_co</code>, <code>Tai_lieu_chua_co</code>,
+    <code>Tai_lieu_cho_chuyen_PDF</code>, <code>Tien_do_UT1</code>,
+    <code>Tien_do_UT2</code>, <code>Tien_do_UT3</code>. Mọi cột khác giữ nguyên tuyệt đối.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="b7">
+  <h3><span class="buoc-so" aria-hidden="true">7</span>Bước 7 &mdash; Báo cáo</h3>
+  <p>
+    Xuất báo cáo <code>.docx</code> đúng thể thức và phụ lục <code>.xlsx</code> ba trang
+    tính: <code>Tong_hop</code>, <code>Chi_tiet_dang_vien</code>, <code>Con_thieu_UT1</code>.
+  </p>
+  <p>
+    Mặc định dùng <strong>thể thức văn bản của Đảng</strong> &mdash; tiêu đề
+    <em>ĐẢNG CỘNG SẢN VIỆT NAM</em>, số hiệu dạng <code>Số 12-BC/ĐU</code>, người ký
+    <em>T/M ĐẢNG ỦY</em> &mdash; vì cơ quan ban hành là một tổ chức đảng. Có ô chuyển
+    sang thể thức nhà nước (Quốc hiệu &mdash; Tiêu ngữ) nếu cần. Bố cục, lề, phông và
+    cách đánh đề mục theo Nghị định 30/2020/NĐ-CP.
+  </p>
+  <p>
+    Chọn phạm vi: toàn đảng bộ, hoặc riêng một chi bộ. Tên đảng bộ, cơ quan chủ quản
+    và địa danh điền sẵn từ bước 0, vẫn sửa được tại chỗ.
+  </p>
+  <p class="mach-nuoc">
+    Mục &ldquo;Tồn tại, hạn chế&rdquo; trong báo cáo luôn ghi rõ: bản này mới đặt tên và
+    sắp xếp đúng quy tắc, <strong>chưa</strong> ký số và chưa kiểm 200 dpi theo Thông tư
+    02/2019/TT-BNV. Không có mục đó thì người đọc dễ hiểu nhầm là đã số hóa xong theo
+    chuẩn lưu trữ.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="dat-ten">
+  <h3>Quy tắc đặt tên tệp scan</h3>
+  <p>Người scan chỉ cần đặt <strong>ba phần</strong>:</p>
+  <p class="xem-truoc-ma">
+    <code translate="no">[Chi bộ].[ID đảng viên].[Mã tài liệu]</code> &rarr;
+    ví dụ <code translate="no">A.ID01.65.pdf</code>
+  </p>
+  <ul>
+    <li>
+      <strong>Chi bộ</strong> &mdash; mã chữ cái app cấp ở bước 1 (A, B, C&hellip;).
+      <em>Có thể bỏ:</em> <code translate="no">ID01.65.pdf</code> vẫn nhận được.
+    </li>
+    <li><strong>ID đảng viên</strong> &mdash; mã trong sổ cái, dạng <code translate="no">ID01</code>. Bắt buộc.</li>
+    <li><strong>Mã tài liệu</strong> &mdash; số thứ tự trong danh mục {{ so_loai_tai_lieu }} loại. Bắt buộc.</li>
+    <li>
+      <strong>Số thứ tự ở cuối</strong> &mdash; <em>tùy chọn.</em>
+      <code translate="no">A.ID01.65.1.pdf</code> nghĩa là tài liệu thứ 1 của loại 65.
+      Không ghi thì app tự cấp số nối tiếp. Hai tệp cùng mã trong một thư mục thì
+      Windows đã bắt đổi tên ngay lúc scan, nên không cần phần này để phân biệt.
+    </li>
+  </ul>
+  <p>Tên tệp đích do app đặt luôn có đủ bốn phần, mã tài liệu đệm đủ ba chữ số:</p>
+  <p class="xem-truoc-ma">
+    <code translate="no">065.Ban_tu_kiem_diem_dang_vien_vi_pham.1.pdf</code>
+  </p>
+  <p class="mach-nuoc">
+    Đệm ba chữ số là có chủ ý: không đệm thì File Explorer sắp xếp ra
+    <code translate="no">1, 10, 100, 2</code> và cán bộ tra tay rất khổ.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="ma-loi">
+  <h3>Bảng mã lỗi và cảnh báo</h3>
+  <p>
+    <strong>Lỗi</strong> chặn tệp, không cho phép chép sang thư mục đích cho tới khi
+    được xử lý. <strong>Cảnh báo</strong> không chặn thao tác, chỉ nhằm cung cấp thông
+    tin để anh/chị đối chiếu và cân nhắc thêm.
+  </p>
+  <div class="cuon-ngang">
+    <table>
+      <caption class="phu">Mã lỗi khi quét tệp scan</caption>
+      <thead><tr><th style="width:5rem">Mã</th><th>Nghĩa</th></tr></thead>
+      <tbody>
+        {% for ma, ten in loai_loi.items() %}
+        <tr><td><code translate="no">{{ ma }}</code></td><td>{{ ten }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="cuon-ngang">
+    <table>
+      <caption class="phu">Mã cảnh báo</caption>
+      <thead><tr><th style="width:5rem">Mã</th><th>Nghĩa</th></tr></thead>
+      <tbody>
+        {% for ma, ten in loai_canh_bao.items() %}
+        <tr><td><code translate="no">{{ ma }}</code></td><td>{{ ten }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="phu">
+    Mỗi dòng lỗi trên giao diện nói đủ ba ý: sai gì &middot; vì sao &middot; sửa thế nào.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="tien-ich">
+  <h3>Tiện ích dùng chung</h3>
+  <ul>
+    <li>
+      <strong>Hộp thoại chọn thư mục.</strong> Do trình duyệt không thể truy xuất
+      trực tiếp đường dẫn trên máy, app tự xây dựng hộp thoại duyệt thư mục riêng.
+      Hộp thoại có nút chọn ổ đĩa, nút đi lên thư mục cha, và hiển thị
+      <em>độ dài ký tự</em> của đường dẫn hiện tại &mdash; đây chính là con số quyết
+      định cây thư mục có vượt giới hạn 260 ký tự của Windows hay không, để
+      anh/chị chủ động điều chỉnh trước khi tạo cây.
+    </li>
+    <li>
+      <strong>Xuất gói chẩn đoán</strong> (nút ở chân mọi trang). Nén nhật ký, cấu
+      hình, tóm tắt trạng thái và manifest gần nhất thành một tệp <code>.zip</code>
+      để gửi kèm khi báo lỗi.
+    </li>
+    <li><strong>Nhật ký</strong> <code>app/data/app.log</code>, xoay vòng ở 1&nbsp;MB.</li>
+    <li>
+      <strong>Bàn phím.</strong> Phím <kbd>Esc</kbd> đóng hộp thoại; liên kết
+      <em>Bỏ qua, tới nội dung chính</em> hiện ra khi bấm <kbd>Tab</kbd> lần đầu.
+    </li>
+  </ul>
+</section>
+
+<section class="the khoi-huong-dan" id="rieng-tu">
+  <h3>Dữ liệu cá nhân và quyền riêng tư</h3>
+  <p>Hồ sơ đảng viên có số CCCD và ngày sinh, nên app dựng sẵn bốn lớp bảo vệ:</p>
+  <ol>
+    <li>Chỉ lắng nghe <code translate="no">127.0.0.1</code> &mdash; máy khác trong mạng cơ quan không truy cập được.</li>
+    <li>
+      Mọi trang và API đều đòi token phiên sinh ngẫu nhiên lúc khởi động, nên một
+      trang web độc hại mở ở tab khác không gọi được API dù cùng máy.
+    </li>
+    <li>Nhật ký <strong>che mọi dãy 9&ndash;12 chữ số</strong> trước khi ghi, nên số CCCD không nằm trong tệp log.</li>
+    <li>
+      Gói chẩn đoán che số định danh một lần nữa, và không chứa nội dung tệp hồ sơ,
+      ngày sinh hay số thẻ đảng viên.
+    </li>
+  </ol>
+  <p class="mach-nuoc">
+    App chạy hoàn toàn ngoại tuyến. Không gửi bất cứ thứ gì ra Internet, không tải
+    phông chữ hay thư viện từ bên ngoài.
+  </p>
+</section>
+
+<section class="the khoi-huong-dan" id="gioi-thieu">
+  <h3>Giới thiệu và bản quyền</h3>
+  <p>{{ ten_ung_dung }} &mdash; ứng dụng cục bộ, chạy một máy, không cần cơ sở dữ liệu.</p>
+  <p class="chan-ban-quyen khong-vien">
+    <img class="dau-hieu" src="/static/img/meo-may.svg" width="22" height="22" alt="">
+    <span translate="no"><strong>{{ ban_quyen }}</strong></span>
+  </p>
+  <p class="phu">
+    {{ giay_phep }}. Mã nguồn mở để chạy và kiểm tra tại chỗ; quyền tác giả thuộc về
+    <span translate="no">{{ tac_gia }}</span>.
+  </p>
+</section>
+
+{% endblock %}

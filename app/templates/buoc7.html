@@ -1,0 +1,154 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  App dựng sẵn báo cáo <code>.docx</code> đúng thể thức và phụ lục số liệu
+  <code>.xlsx</code>. Số liệu lấy nguyên từ lần đối soát vừa rồi, không nhập tay.
+  Mở tệp <code>.docx</code> bằng Word để sửa lời văn trước khi trình ký.
+</p>
+
+<form id="bieu-mau" class="the">
+  <h3>1. Phạm vi và nơi lưu</h3>
+  <label class="o-nhap">
+    <span class="nhan">Phạm vi báo cáo</span>
+    <select id="pham_vi">
+      <option value="">Toàn Đảng bộ ({{ chi_bo | length }} chi bộ)</option>
+      {% for c in chi_bo %}
+      <option value="{{ c.ma_to_chuc }}">{{ c.ma_id }} · {{ c.ten }} ({{ c.so_dang_vien }} đảng viên)</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label class="o-nhap">
+    <span class="nhan">Thư mục lưu báo cáo</span>
+    <span class="hang">
+      <input type="text" id="thu_muc_ra"
+             value="{{ cau_hinh.duong_dan_bao_cao or cau_hinh.duong_dan_goc }}" autocomplete="off" spellcheck="false">
+      <button type="button" class="nut phu-nut"
+              onclick="moDuyet('thu_muc_ra', 'thu_muc')">Duyệt…</button>
+    </span>
+  </label>
+
+  <h3>2. Thể thức văn bản</h3>
+  <p class="phu">
+    Đơn vị ban hành là tổ chức đảng nên mặc định dùng tiêu đề
+    <strong>ĐẢNG CỘNG SẢN VIỆT NAM</strong>. Bố cục, lề, phông và cách đánh đề
+    mục theo Nghị định 30/2020/NĐ-CP.
+  </p>
+
+  <div class="luoi-doi">
+    <label class="o-nhap">
+      <span class="nhan">Kiểu tiêu đề</span>
+      <select id="the_thuc">
+        <option value="dang">Văn bản của Đảng — ĐẢNG CỘNG SẢN VIỆT NAM</option>
+        <option value="nha_nuoc">Văn bản nhà nước — Quốc hiệu, Tiêu ngữ</option>
+      </select>
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Ngày ban hành</span>
+      <input type="date" id="ngay" value="{{ hom_nay }}">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Cơ quan chủ quản</span>
+      <input type="text" id="co_quan_chu_quan" value="{{ mac_dinh.co_quan_chu_quan }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Cơ quan ban hành</span>
+      <input type="text" id="co_quan_ban_hanh" value="{{ mac_dinh.co_quan_ban_hanh }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Số, ký hiệu</span>
+      <input type="text" id="so_hieu" value="{{ mac_dinh.so_hieu }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Địa danh</span>
+      <input type="text" id="dia_danh" value="{{ mac_dinh.dia_danh }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Kính gửi (để trống nếu không có)</span>
+      <input type="text" id="kinh_gui" placeholder="Ban Thường vụ Đảng ủy UBND tỉnh" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Quyền hạn người ký</span>
+      <input type="text" id="quyen_han" value="{{ mac_dinh.quyen_han }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Chức vụ người ký</span>
+      <input type="text" id="chuc_vu_ky" value="{{ mac_dinh.chuc_vu_ky }}" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Họ tên người ký</span>
+      <input type="text" id="ho_ten_ky" placeholder="Để trống thì chừa dòng chấm" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="o-nhap">
+      <span class="nhan">Đơn vị lưu</span>
+      <input type="text" id="don_vi_luu" value="{{ mac_dinh.don_vi_luu }}" autocomplete="off" spellcheck="false">
+    </label>
+  </div>
+
+  <label class="o-nhap">
+    <span class="nhan">Nơi nhận — mỗi dòng một nơi</span>
+    <textarea id="noi_nhan" rows="3">{% for n in mac_dinh.noi_nhan %}{{ n }}
+{% endfor %}</textarea>
+  </label>
+
+  <div class="hang-nut">
+    <button type="submit" class="nut chinh" id="nut-xuat">Xuất báo cáo</button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite"></span>
+  </div>
+</form>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div class="the ket-qua" id="ket-qua" hidden>
+  <h3>Đã xuất xong</h3>
+  <p class="phu" id="noi-luu"></p>
+  <ul class="danh-sach-tep">
+    <li><a id="tai-docx" href="/api/buoc7/tai?loai=docx"></a> — báo cáo, mở bằng Word</li>
+    <li><a id="tai-xlsx" href="/api/buoc7/tai?loai=xlsx"></a> — phụ lục 3 sheet</li>
+  </ul>
+  <p class="phu">
+    Báo cáo đã nêu rõ phần <strong>chưa</strong> đạt chuẩn Thông tư 02/2019/TT-BNV
+    (chưa ký số, chưa kiểm 200 dpi) để không ai hiểu nhầm là đã số hóa xong theo
+    chuẩn lưu trữ.
+  </p>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+document.getElementById('bieu-mau').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('trang-thai');
+  an(document.getElementById('ket-qua'));
+  tt.textContent = 'Đang dựng văn bản…';
+
+  const lay = (id) => document.getElementById(id).value;
+  const d = await goiApi('/api/buoc7/xuat', {
+    pham_vi: lay('pham_vi'),
+    thu_muc_ra: lay('thu_muc_ra'),
+    the_thuc: lay('the_thuc'),
+    ngay: lay('ngay'),
+    co_quan_chu_quan: lay('co_quan_chu_quan'),
+    co_quan_ban_hanh: lay('co_quan_ban_hanh'),
+    so_hieu: lay('so_hieu'),
+    dia_danh: lay('dia_danh'),
+    kinh_gui: lay('kinh_gui'),
+    quyen_han: lay('quyen_han'),
+    chuc_vu_ky: lay('chuc_vu_ky'),
+    ho_ten_ky: lay('ho_ten_ky'),
+    don_vi_luu: lay('don_vi_luu'),
+    noi_nhan: lay('noi_nhan'),
+  });
+  tt.textContent = '';
+  if (!d) return;
+
+  document.getElementById('noi-luu').textContent =
+    `Đã lưu vào ${d.thu_muc} — phạm vi ${d.ten_pham_vi}, ${d.so_dang_vien} đảng viên.`;
+  document.getElementById('tai-docx').textContent = d.docx;
+  document.getElementById('tai-xlsx').textContent = d.xlsx;
+  hien(document.getElementById('ket-qua'));
+});
+</script>
+{% endblock %}

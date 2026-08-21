@@ -1,0 +1,183 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  Sổ cái <code>MAIN.xlsx</code> <strong>được tạo ra từ</strong> danh sách gốc
+  <code>DS_DANGVIEN.xlsx</code>, không phải chọn từ một tệp mẫu. App đọc danh sách,
+  rút ra các chi bộ đang có, rồi anh điền mã tổ chức đảng cho từng chi bộ.
+</p>
+
+<form id="bieu-mau-ds" class="the">
+  <label class="o-nhap">
+    <span class="nhan">1. Tệp danh sách đảng viên (nguồn gốc)</span>
+    <span class="mo-ta">
+      Tệp <code>DS_DANGVIEN.xlsx</code> xuất từ hệ thống quản lý đảng viên cấp trên.
+      Đây là nguồn duy nhất, app chỉ đọc, không bao giờ sửa tệp này.
+    </span>
+    <span class="hang">
+      <input type="text" name="duong_dan_ds" id="duong_dan_ds"
+             value="{{ cau_hinh.duong_dan_ds }}"
+             placeholder="D:\SoHoa\DS_DANGVIEN.xlsx" autocomplete="off" spellcheck="false">
+      <button type="button" class="nut phu-nut"
+              onclick="moDuyet('duong_dan_ds', 'tep', '.xlsx')">Duyệt…</button>
+    </span>
+  </label>
+
+  <div class="hang-nut">
+    <button type="submit" class="nut phu-nut" id="nut-doc">Đọc danh sách</button>
+    <span class="trang-thai" id="tt-doc" aria-live="polite"></span>
+  </div>
+</form>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div id="khu-chi-bo" hidden>
+  <section class="the">
+    <h3>2. Mã tổ chức đảng của từng chi bộ</h3>
+    <p class="phu">
+      Theo Quy định 208-QĐ/TW, mã có dạng <code translate="no">[2].[3].[3].[3].[3]</code>.
+      {% if cau_hinh.ma_dang_bo_co_so %}
+        Ba nhóm đầu đã khai ở bước 0 là
+        <code translate="no">{{ cau_hinh.ma_dang_bo_co_so }}</code>, nên các chi bộ chỉ
+        khác nhau ở hai nhóm cuối — ví dụ
+        <code translate="no">{{ cau_hinh.ma_dang_bo_co_so }}.000.001</code>.
+        App từ chối mã nào không thuộc đảng bộ cơ sở này.
+      {% else %}
+        Ví dụ <code translate="no">38.168.053.000.001</code>.
+      {% endif %}
+      Tên thư mục chi bộ trên đĩa sẽ <strong>giữ nguyên dấu chấm</strong>.
+    </p>
+    <p class="phu" id="ghi-chu-chu-cai"></p>
+    <div class="cuon-ngang">
+      <table id="bang-chi-bo">
+        <thead>
+          <tr>
+            <th style="width:3rem">Mã</th>
+            <th>Chi bộ (lấy từ danh sách gốc)</th>
+            <th style="width:5rem">Đảng viên</th>
+            <th style="width:15rem">Mã tổ chức đảng</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <form id="bieu-mau-nap" class="the">
+    <label class="o-nhap">
+      <span class="nhan">3. Nơi lưu sổ cái</span>
+      <span class="mo-ta">
+        Chọn <strong>thư mục</strong> cũng được — app tự đặt tên
+        <code>MAIN.xlsx</code> vào đó. Nếu tệp đã có, app đọc nó làm sổ cái cũ
+        và <strong>giữ nguyên mọi mã ID</strong> đã cấp.
+      </span>
+      <span class="hang">
+        <input type="text" id="duong_dan_main" value="{{ cau_hinh.duong_dan_main }}" autocomplete="off" spellcheck="false">
+        <button type="button" class="nut phu-nut"
+                onclick="moDuyet('duong_dan_main', 'tep', '.xlsx')">Duyệt…</button>
+      </span>
+    </label>
+
+    <div class="hang-nut">
+      <button type="submit" class="nut chinh" id="nut-nap">Đối chiếu và tạo sổ cái</button>
+      <span class="trang-thai" id="tt-nap" aria-live="polite"></span>
+    </div>
+  </form>
+</div>
+
+<div class="the ket-qua" id="ket-qua" hidden>
+  <h3>Đã đối chiếu xong</h3>
+  <dl class="so-lieu" id="so-lieu"></dl>
+  <p id="loi-chan" class="canh-bao-do" hidden></p>
+  <a href="/buoc/2" class="nut chinh">Xem bảng dữ liệu &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+let CHI_BO = [];
+let MA_CO_SO = '{{ cau_hinh.ma_dang_bo_co_so }}';
+
+document.getElementById('bieu-mau-ds').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('tt-doc');
+  an(document.getElementById('khu-chi-bo'));
+  an(document.getElementById('ket-qua'));
+  tt.textContent = 'Đang đọc danh sách…';
+
+  const fd = new FormData(e.target);
+  fd.append('duong_dan_main', document.getElementById('duong_dan_main').value || '');
+  const d = await goiApi('/api/buoc1/doc_ds', fd);
+  tt.textContent = '';
+  if (!d) return;
+
+  CHI_BO = d.chi_bo;
+  document.getElementById('duong_dan_main').value = d.duong_dan_main;
+  MA_CO_SO = d.ma_co_so || MA_CO_SO;
+  document.getElementById('ghi-chu-chu-cai').textContent = d.main_da_ton_tai
+    ? 'Đã tìm thấy sổ cái cũ — mã đã điền sẵn. Mã chữ cái giữ nguyên vì nó nằm '
+      + 'trong tên tệp scan (A.ID01.65).'
+    : 'Chưa có sổ cái. App tự cấp mã chữ cái theo thứ tự; anh chỉ cần điền mã tổ chức đảng.';
+
+  const tbody = document.querySelector('#bang-chi-bo tbody');
+  tbody.innerHTML = '';
+  CHI_BO.forEach((cb, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><code>${cb.ma_id}</code></td>`
+      + `<td></td><td class="so">${cb.so_dang_vien}</td>`
+      + `<td><input type="text" data-i="${i}" class="o-ma" translate="no"`
+      + ` autocomplete="off" spellcheck="false" inputmode="numeric"`
+      + ` aria-label="Mã tổ chức đảng của chi bộ thứ ${i + 1}"`
+      + ` placeholder="${MA_CO_SO || '38.168.053'}.000.0NN"></td>`;
+    tr.children[1].textContent = cb.ten;   // đặt qua textContent để không dính XSS
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('.o-ma').forEach((o) => {
+    // Đặt qua property chứ không nối vào chuỗi HTML — giá trị này đến từ
+    // sổ cái cũ trên đĩa, nối thẳng là mở đường cho XSS.
+    o.value = CHI_BO[+o.dataset.i].ma_to_chuc || '';
+    o.addEventListener('input', () => { CHI_BO[+o.dataset.i].ma_to_chuc = o.value; });
+  });
+
+  document.getElementById('tt-doc').textContent = `Đọc được ${d.so_dang_vien} đảng viên.`;
+  hien(document.getElementById('khu-chi-bo'));
+});
+
+document.getElementById('bieu-mau-nap').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tt = document.getElementById('tt-nap');
+  an(document.getElementById('ket-qua'));
+  tt.textContent = 'Đang đối chiếu…';
+
+  const d = await goiApi('/api/buoc1/nap', {
+    duong_dan_ds: document.getElementById('duong_dan_ds').value,
+    duong_dan_main: document.getElementById('duong_dan_main').value,
+    chi_bo: CHI_BO,
+  });
+  tt.textContent = '';
+  if (!d) return;
+
+  // Máy chủ có thể đã chuẩn hóa (thư mục thành tệp MAIN.xlsx trong thư mục đó); cho người dùng
+  // thấy đúng tệp sắp được ghi chứ không phải thứ họ vừa gõ.
+  document.getElementById('duong_dan_main').value = d.duong_dan_main;
+
+  document.getElementById('so-lieu').innerHTML = [
+    ['Đảng viên', d.so_dang_vien],
+    ['Chi bộ', d.so_chi_bo],
+    ['Thêm mới lần này', d.them_moi],
+    ['Không còn trong danh sách', d.roi_danh_sach],
+    ['Dòng cần sửa', d.du_lieu_ban],
+    ['Cảnh báo', d.canh_bao],
+    ['Lỗi phải xử lý', d.loi],
+  ].map(([k, v]) => `<div><dt>${k}</dt><dd>${soVN(v)}</dd></div>`).join('');
+
+  const chan = document.getElementById('loi-chan');
+  if (d.co_loi_chan) {
+    chan.textContent = 'Còn lỗi phải xử lý trước khi ghi sổ cái. Sang bước 2 xem chi tiết.';
+    hien(chan);
+  } else { an(chan); }
+  hien(document.getElementById('ket-qua'));
+});
+</script>
+{% endblock %}

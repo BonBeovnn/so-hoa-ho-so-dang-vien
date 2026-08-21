@@ -1,0 +1,152 @@
+{% extends "co_so.html" %}
+{% block noi_dung %}
+
+<p class="dan-nhap">
+  Thao tác duy nhất ở bước này là <strong>chép</strong>. Thư mục scan không bị
+  đụng tới, nên chép sai thì xóa thư mục đích rồi chạy lại. Mỗi lần chạy đều ghi
+  một tệp nhật ký <code>manifest</code> liệt kê từng tệp.
+</p>
+
+<div class="the">
+  <p class="phu">
+    Nguồn: <code class="nho">{{ cau_hinh.duong_dan_scan }}</code><br>
+    Kho đích: <code class="nho">{{ cau_hinh.duong_dan_goc }}</code>
+  </p>
+  <div class="hang-nut">
+    <button type="button" class="nut phu-nut" id="nut-xem">Xem trước</button>
+    <span class="trang-thai" id="trang-thai" aria-live="polite"></span>
+  </div>
+</div>
+
+<div class="hop-loi" id="hop-loi" role="alert" hidden></div>
+
+<div id="xem-truoc" hidden>
+  <section class="the">
+    <h3>Sắp thực hiện</h3>
+    <dl class="so-lieu" id="tom-tat"></dl>
+    <p class="phu" id="dung-luong"></p>
+    <p class="canh-bao-do" id="thieu-cho" hidden></p>
+    <div class="hang-nut">
+      <button type="button" class="nut chinh" id="nut-chay">Thực thi</button>
+      <span class="trang-thai" id="trang-thai-chay" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <details class="the" open>
+    <summary>Chi tiết <span id="so-dong"></span> tệp</summary>
+    <div class="cuon-ngang">
+      <table class="gon">
+        <thead>
+          <tr>
+            <th>Tệp nguồn</th><th>Đảng viên</th>
+            <th>Tên mới</th><th>Kho</th><th>Việc</th>
+          </tr>
+        </thead>
+        <tbody id="than-bang"></tbody>
+      </table>
+    </div>
+    <p class="phu" id="con-lai" hidden></p>
+  </details>
+</div>
+
+<div class="the ket-qua" id="da-xong" hidden>
+  <h3>Đã chép xong</h3>
+  <dl class="so-lieu" id="tom-tat-sau"></dl>
+  <p class="phu" id="duong-dan-manifest"></p>
+  <a href="/buoc/6" class="nut chinh">Sang bước 6 &rarr;</a>
+</div>
+
+{% endblock %}
+
+{% block kich_ban %}
+<script>
+let NHAN = {};
+
+function gb(byte) {
+  if (byte >= 1e9) return (byte / 1e9).toFixed(2) + ' GB';
+  if (byte >= 1e6) return (byte / 1e6).toFixed(1) + ' MB';
+  if (byte >= 1e3) return (byte / 1e3).toFixed(1) + ' KB';
+  return byte + ' byte';
+}
+
+function veTomTat(dich, tomTat) {
+  const hang = [];
+  for (const [k, v] of Object.entries(tomTat)) {
+    if (v > 0) hang.push([NHAN[k] || k, v]);
+  }
+  document.getElementById(dich).innerHTML = hang.length
+    ? hang.map(([k, v]) => `<div><dt>${k}</dt><dd>${soVN(v)}</dd></div>`).join('')
+    : '<div><dt>Không có tệp nào</dt><dd>0</dd></div>';
+}
+
+function o(the, lop, chu) {
+  const el = document.createElement(the);
+  if (lop) el.className = lop;
+  if (chu !== undefined) el.textContent = chu;   // tên tệp là dữ liệu lạ, luôn textContent
+  return el;
+}
+
+document.getElementById('nut-xem').addEventListener('click', async () => {
+  const tt = document.getElementById('trang-thai');
+  an(document.getElementById('xem-truoc'));
+  an(document.getElementById('da-xong'));
+  tt.textContent = 'Đang đối chiếu với kho…';
+
+  const d = await goiApi('/api/buoc5/xem', new FormData());
+  tt.textContent = '';
+  if (!d) return;
+
+  NHAN = d.nhan_hanh_dong;
+  veTomTat('tom-tat', d.tom_tat);
+  document.getElementById('dung-luong').textContent =
+    `Cần chép ${gb(d.tong_byte)}. Ổ đĩa còn trống ${gb(d.byte_con_trong)}.`;
+
+  const thieu = document.getElementById('thieu-cho');
+  thieu.hidden = d.du_cho_trong;
+  thieu.textContent = d.du_cho_trong ? ''
+    : 'Ổ đĩa không đủ chỗ. Dọn bớt rồi xem trước lại — app sẽ không chép dở dang.';
+
+  document.getElementById('so-dong').textContent = d.so_dong;
+  const than = document.getElementById('than-bang');
+  than.innerHTML = '';
+  d.dong.forEach((t) => {
+    const tr = o('tr', t.hanh_dong === 'bo_qua' ? 'hd-da_co' : null);
+    const c1 = o('td');
+    c1.appendChild(o('code', 'nho', t.ten_goc));
+    tr.appendChild(c1);
+    tr.appendChild(o('td', null, `${t.id_dang_vien} · ${t.ten_dang_vien}`));
+    const c3 = o('td');
+    c3.appendChild(o('code', 'nho', t.ten_moi));
+    tr.appendChild(c3);
+    tr.appendChild(o('td', 'phu', t.kho_cho ? 'Chờ chuyển PDF' : 'Kho chính'));
+    tr.appendChild(o('td', 'phu', NHAN[t.hanh_dong] || t.hanh_dong));
+    than.appendChild(tr);
+  });
+
+  const conLai = document.getElementById('con-lai');
+  conLai.hidden = !d.con_lai;
+  conLai.textContent = d.con_lai ? `Còn ${d.con_lai} tệp nữa không hiện ở đây.` : '';
+
+  document.getElementById('nut-chay').disabled = !d.tom_tat.copy;
+  document.getElementById('trang-thai-chay').textContent =
+    d.tom_tat.copy ? '' : 'Không có tệp mới nào để chép.';
+  hien(document.getElementById('xem-truoc'));
+});
+
+document.getElementById('nut-chay').addEventListener('click', async () => {
+  const nut = document.getElementById('nut-chay');
+  const tt = document.getElementById('trang-thai-chay');
+  nut.disabled = true;
+  tt.textContent = 'Đang chép…';
+
+  const d = await goiApi('/api/buoc5/thuc_thi', new FormData());
+  tt.textContent = '';
+  if (!d) { nut.disabled = false; return; }
+
+  veTomTat('tom-tat-sau', d.tom_tat);
+  document.getElementById('duong-dan-manifest').textContent =
+    'Nhật ký lần chạy này: ' + d.manifest;
+  hien(document.getElementById('da-xong'));
+});
+</script>
+{% endblock %}

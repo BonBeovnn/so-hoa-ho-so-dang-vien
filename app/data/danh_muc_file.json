@@ -1,0 +1,536 @@
+{
+  "nguon": [
+    "LowcodeAPP.MD",
+    "MAIN.xlsx!DANH_MUC_FILE"
+  ],
+  "ngay_trich": "2026-08-20",
+  "tong_so": 104,
+  "so_luong_theo_uu_tien": {
+    "1": 36,
+    "2": 49,
+    "3": 19
+  },
+  "do_dai_ten_tep_lon_nhat": 91,
+  "muc": {
+    "1": {
+      "ten_day_du": "Lý lịch của người xin vào Đảng",
+      "ten_tep": "Ly_lich_nguoi_xin_vao_Dang",
+      "uu_tien": 1
+    },
+    "2": {
+      "ten_day_du": "Lý lịch đảng viên",
+      "ten_tep": "Ly_lich_dang_vien",
+      "uu_tien": 1
+    },
+    "3": {
+      "ten_day_du": "Phiếu đảng viên",
+      "ten_tep": "Phieu_dang_vien",
+      "uu_tien": 1
+    },
+    "4": {
+      "ten_day_du": "Phiếu bổ sung hồ sơ đảng viên",
+      "ten_tep": "Phieu_bo_sung_ho_so_dang_vien",
+      "uu_tien": 1
+    },
+    "5": {
+      "ten_day_du": "Quyết định kết nạp đảng viên",
+      "ten_tep": "QD_ket_nap_dang_vien",
+      "uu_tien": 1
+    },
+    "6": {
+      "ten_day_du": "Quyết định kết nạp lại người vào Đảng (của cấp uỷ có thẩm quyền)",
+      "ten_tep": "QD_ket_nap_lai_nguoi_vao_Dang_cap_uy_co_tham_quyen",
+      "uu_tien": 1
+    },
+    "7": {
+      "ten_day_du": "Quyết định công nhận đảng viên chính thức",
+      "ten_tep": "QD_cong_nhan_dang_vien_chinh_thuc",
+      "uu_tien": 1
+    },
+    "8": {
+      "ten_day_du": "Quyết định của cấp uỷ có thẩm quyền xoá tên đảng viên dự bị",
+      "ten_tep": "QD_cap_uy_co_tham_quyen_xoa_ten_dang_vien_du_bi",
+      "uu_tien": 1
+    },
+    "9": {
+      "ten_day_du": "Quyết định công nhận đảng viên sau khi khắc phục, thực hiện đúng quy định về thẩm quyền, thủ tục kết nạp đảng viên",
+      "ten_tep": "QD_cong_nhan_dang_vien_sau_khi_khac_phuc_thuc_hien_dung_quy_dinh",
+      "uu_tien": 1
+    },
+    "10": {
+      "ten_day_du": "Quyết định công nhận đảng viên chính thức sau khi khắc phục, thực hiện đúng quy định về thẩm quyền, thủ tục",
+      "ten_tep": "QD_cong_nhan_dang_vien_chinh_thuc_sau_khi_khac_phuc_thuc_hien_dung_quy_dinh",
+      "uu_tien": 1
+    },
+    "11": {
+      "ten_day_du": "Quyết định hủy quyết định kết nạp đảng viên sai quy định, không đúng tiêu chuẩn, điều kiện",
+      "ten_tep": "QD_huy_QD_ket_nap_dang_vien_sai_quy_dinh_khong_dung_tieu_chuan_dieu_kien",
+      "uu_tien": 1
+    },
+    "12": {
+      "ten_day_du": "Quyết định hủy quyết định kết nạp lại đảng viên sai quy định, không đúng tiêu chuẩn, điều kiện",
+      "ten_tep": "QD_huy_QD_ket_nap_lai_dang_vien_sai_quy_dinh_khong_dung_tieu_chuan_dieu_kien",
+      "uu_tien": 1
+    },
+    "13": {
+      "ten_day_du": "Quyết định hủy quyết định công nhận đảng viên chính thức sai quy định, không đúng tiêu chuẩn, điều kiện",
+      "ten_tep": "QD_huy_QD_cong_nhan_dang_vien_chinh_thuc_sai_quy_dinh_khong_dung_tieu_chuan_dieu_kien",
+      "uu_tien": 1
+    },
+    "14": {
+      "ten_day_du": "Quyết định khôi phục quyền của đảng viên",
+      "ten_tep": "QD_khoi_phuc_quyen_dang_vien",
+      "uu_tien": 1
+    },
+    "15": {
+      "ten_day_du": "Quyết định nối lại sinh hoạt đảng của đảng viên",
+      "ten_tep": "QD_noi_lai_sinh_hoat_dang_dang_vien",
+      "uu_tien": 1
+    },
+    "16": {
+      "ten_day_du": "Quyết định xoá tên trong danh sách đảng viên (theo Điều 8 Điều lệ Đảng)",
+      "ten_tep": "QD_xoa_ten_trong_danh_sach_dang_vien_theo_Dieu_8_Dieu_le_Dang",
+      "uu_tien": 1
+    },
+    "17": {
+      "ten_day_du": "Quyết định cho đảng viên ra khỏi Đảng",
+      "ten_tep": "QD_cho_dang_vien_ra_khoi_Dang",
+      "uu_tien": 1
+    },
+    "18": {
+      "ten_day_du": "Giấy xác nhận tuổi Đảng",
+      "ten_tep": "Giay_xac_nhan_tuoi_Dang",
+      "uu_tien": 1
+    },
+    "19": {
+      "ten_day_du": "Quyết định phát thẻ đảng viên cho cá nhân đảng viên",
+      "ten_tep": "QD_phat_the_dang_vien_cho_ca_nhan_dang_vien",
+      "uu_tien": 1
+    },
+    "20": {
+      "ten_day_du": "Quyết định tặng Huy hiệu Đảng đối với cá nhân đảng viên",
+      "ten_tep": "QD_tang_HHD_doi_voi_ca_nhan_dang_vien",
+      "uu_tien": 1
+    },
+    "21": {
+      "ten_day_du": "Quyết định truy tặng Huy hiệu Đảng đối với cá nhân đảng viên",
+      "ten_tep": "QD_truy_tang_HHD_doi_voi_ca_nhan_dang_vien",
+      "uu_tien": 1
+    },
+    "22": {
+      "ten_day_du": "Quyết định kỷ luật Đảng",
+      "ten_tep": "QD_ky_luat_Dang",
+      "uu_tien": 1
+    },
+    "23": {
+      "ten_day_du": "Quyết định khen thưởng",
+      "ten_tep": "QD_khen_thuong",
+      "uu_tien": 1
+    },
+    "24": {
+      "ten_day_du": "Quyết định đình chỉ sinh hoạt đảng",
+      "ten_tep": "QD_dinh_chi_sinh_hoat_dang",
+      "uu_tien": 1
+    },
+    "25": {
+      "ten_day_du": "Quyết định đình chỉ cấp ủy",
+      "ten_tep": "QD_dinh_chi_cap_uy",
+      "uu_tien": 1
+    },
+    "26": {
+      "ten_day_du": "Quyết định gia hạn đình chỉ sinh hoạt đảng",
+      "ten_tep": "QD_gia_han_dinh_chi_sinh_hoat_dang",
+      "uu_tien": 1
+    },
+    "27": {
+      "ten_day_du": "Quyết định gia hạn đình chỉ cấp ủy",
+      "ten_tep": "QD_gia_han_dinh_chi_cap_uy",
+      "uu_tien": 1
+    },
+    "28": {
+      "ten_day_du": "Quyết định giải quyết khiếu nại",
+      "ten_tep": "QD_giai_quyet_khieu_nai",
+      "uu_tien": 1
+    },
+    "29": {
+      "ten_day_du": "Quyết định giải quyết tố cáo",
+      "ten_tep": "QD_giai_quyet_to_cao",
+      "uu_tien": 1
+    },
+    "30": {
+      "ten_day_du": "Quyết định đình chỉ chức vụ trong đảng đối với cá nhân",
+      "ten_tep": "QD_dinh_chi_chuc_vu_trong_dang_doi_voi_ca_nhan",
+      "uu_tien": 1
+    },
+    "31": {
+      "ten_day_du": "Quyết định cho trở lại sinh hoạt cấp ủy (hoặc sinh hoạt đảng)",
+      "ten_tep": "QD_cho_tro_lai_sinh_hoat_cap_uy_hoac_sinh_hoat_dang",
+      "uu_tien": 1
+    },
+    "32": {
+      "ten_day_du": "Thông báo kết luận giải quyết tố cáo",
+      "ten_tep": "TB_KL_giai_quyet_to_cao",
+      "uu_tien": 1
+    },
+    "33": {
+      "ten_day_du": "Thông báo về việc không giải quyết khiếu nại kỷ luật đảng",
+      "ten_tep": "TB_ve_viec_khong_giai_quyet_khieu_nai_ky_luat_dang",
+      "uu_tien": 1
+    },
+    "34": {
+      "ten_day_du": "Kết luận kiểm tra của Ủy ban Kiểm tra/Đoàn kiểm tra khi có dấu hiệu vi phạm",
+      "ten_tep": "KL_kiem_tra_Uy_ban_Kiem_tra_Doan_kiem_tra_khi_co_dau_hieu_vi_pham",
+      "uu_tien": 1
+    },
+    "35": {
+      "ten_day_du": "Kết luận minh oan/không vi phạm của cơ quan có thẩm quyền",
+      "ten_tep": "KL_minh_oan_khong_vi_pham_co_quan_co_tham_quyen",
+      "uu_tien": 1
+    },
+    "36": {
+      "ten_day_du": "Quyết định kỷ luật hành chính (khiển trách/cảnh cáo/hạ bậc lương/giáng chức/cách chức/buộc thôi việc)",
+      "ten_tep": "QD_ky_luat_hanh_chinh_khien_trach_canh_cao",
+      "uu_tien": 1
+    },
+    "37": {
+      "ten_day_du": "Đơn xin vào Đảng",
+      "ten_tep": "Don_xin_vao_Dang",
+      "uu_tien": 2
+    },
+    "38": {
+      "ten_day_du": "Giấy chứng nhận học lớp nhận thức về Đảng",
+      "ten_tep": "GCN_hoc_lop_nhan_thuc_ve_Dang",
+      "uu_tien": 2
+    },
+    "39": {
+      "ten_day_du": "Giấy giới thiệu người vào Đảng",
+      "ten_tep": "GGT_nguoi_vao_Dang",
+      "uu_tien": 2
+    },
+    "40": {
+      "ten_day_du": "Nghị quyết giới thiệu đoàn viên ưu tú vào Đảng",
+      "ten_tep": "NQ_gioi_thieu_doan_vien_uu_tu_vao_Dang",
+      "uu_tien": 2
+    },
+    "41": {
+      "ten_day_du": "Nghị quyết giới thiệu đoàn viên công đoàn vào Đảng",
+      "ten_tep": "NQ_gioi_thieu_doan_vien_cong_doan_vao_Dang",
+      "uu_tien": 2
+    },
+    "42": {
+      "ten_day_du": "Tổng hợp ý kiến nhận xét của các đoàn thể chính trị - xã hội nơi sinh hoạt và chi uỷ (hoặc chi bộ) nơi cư trú đối với người vào Đảng",
+      "ten_tep": "Tong_hop_y_kien_nhan_xet_cac_doan_the_CTXH_doi_voi_nguoi_vao_Dang",
+      "uu_tien": 2
+    },
+    "43": {
+      "ten_day_du": "Nghị quyết đề nghị kết nạp đảng viên của chi bộ",
+      "ten_tep": "NQ_de_nghi_ket_nap_dang_vien_chi_bo",
+      "uu_tien": 2
+    },
+    "44": {
+      "ten_day_du": "Báo cáo về việc thẩm định nghị quyết của chi bộ đề nghị kết nạp đảng viên của đảng uỷ bộ phận",
+      "ten_tep": "Bao_cao_ve_viec_tham_dinh_NQ_chi_bo_de_nghi_ket_nap_dang_vien_dang_uy_bo_phan",
+      "uu_tien": 2
+    },
+    "45": {
+      "ten_day_du": "Nghị quyết đề nghị kết nạp đảng viên của đảng uỷ cơ sở",
+      "ten_tep": "NQ_de_nghi_ket_nap_dang_vien_dang_uy_co_so",
+      "uu_tien": 2
+    },
+    "46": {
+      "ten_day_du": "Giấy chứng nhận học lớp đảng viên mới",
+      "ten_tep": "GCN_hoc_lop_dang_vien_moi",
+      "uu_tien": 2
+    },
+    "47": {
+      "ten_day_du": "Bản tự kiểm điểm của đảng viên dự bị (đề nghị công nhận đảng viên chính thức)",
+      "ten_tep": "Ban_tu_kiem_diem_dang_vien_du_bi_de_nghi_cong_nhan_dang_vien_chinh_thuc",
+      "uu_tien": 2
+    },
+    "48": {
+      "ten_day_du": "Bản nhận xét đảng viên dự bị của đảng viên được phân công giúp đỡ",
+      "ten_tep": "Ban_nhan_xet_dang_vien_du_bi_dang_vien_duoc_phan_cong_giup_do",
+      "uu_tien": 2
+    },
+    "49": {
+      "ten_day_du": "Tổng hợp ý kiến nhận xét của các đoàn thể chính trị - xã hội nơi sinh hoạt và chi uỷ (hoặc chi bộ) nơi cư trú đối với đảng viên dự bị",
+      "ten_tep": "Tong_hop_y_kien_nhan_xet_cac_doan_the_CTXH_doi_voi_dang_vien_du_bi",
+      "uu_tien": 2
+    },
+    "50": {
+      "ten_day_du": "Nghị quyết đề nghị công nhận đảng viên chính thức của chi bộ",
+      "ten_tep": "NQ_de_nghi_cong_nhan_dang_vien_chinh_thuc_chi_bo",
+      "uu_tien": 2
+    },
+    "51": {
+      "ten_day_du": "Báo cáo về việc thẩm định nghị quyết của chi bộ đề nghị công nhận đảng viên chính thức của đảng uỷ bộ phận",
+      "ten_tep": "Bao_cao_ve_viec_tham_dinh_NQ_chi_bo_de_nghi_cong_nhan_dang_vien_chinh_thuc",
+      "uu_tien": 2
+    },
+    "52": {
+      "ten_day_du": "Nghị quyết đề nghị công nhận đảng viên chính thức của đảng uỷ cơ sở",
+      "ten_tep": "NQ_de_nghi_cong_nhan_dang_vien_chinh_thuc_dang_uy_co_so",
+      "uu_tien": 2
+    },
+    "53": {
+      "ten_day_du": "Giấy chứng nhận người vào Đảng đang trong thời gian được tổ chức đảng giúp đỡ, xem xét kết nạp của cấp uỷ cơ sở",
+      "ten_tep": "GCN_nguoi_vao_Dang_dang_trong_thoi_gian_duoc_to_chuc_dang_giup_do",
+      "uu_tien": 2
+    },
+    "54": {
+      "ten_day_du": "Giấy giới thiệu sinh hoạt đảng chính thức",
+      "ten_tep": "GGT_sinh_hoat_dang_chinh_thuc",
+      "uu_tien": 2
+    },
+    "55": {
+      "ten_day_du": "Giấy giới thiệu sinh hoạt đảng tạm thời",
+      "ten_tep": "GGT_sinh_hoat_dang_tam_thoi",
+      "uu_tien": 2
+    },
+    "56": {
+      "ten_day_du": "Giấy giới thiệu sinh hoạt đảng ra ngoài nước",
+      "ten_tep": "GGT_sinh_hoat_dang_ra_ngoai_nuoc",
+      "uu_tien": 2
+    },
+    "57": {
+      "ten_day_du": "Phiếu công tác chính thức ngoài nước",
+      "ten_tep": "Phieu_cong_tac_chinh_thuc_ngoai_nuoc",
+      "uu_tien": 2
+    },
+    "58": {
+      "ten_day_du": "Phiếu công tác tạm thời ngoài nước",
+      "ten_tep": "Phieu_cong_tac_tam_thoi_ngoai_nuoc",
+      "uu_tien": 2
+    },
+    "59": {
+      "ten_day_du": "Giấy giới thiệu sinh hoạt đảng nội bộ",
+      "ten_tep": "GGT_sinh_hoat_dang_noi_bo",
+      "uu_tien": 2
+    },
+    "60": {
+      "ten_day_du": "Phiếu báo đảng viên chuyển sinh hoạt đảng chính thức",
+      "ten_tep": "PB_dang_vien_chuyen_sinh_hoat_dang_chinh_thuc",
+      "uu_tien": 2
+    },
+    "61": {
+      "ten_day_du": "Bản tự kiểm điểm hằng năm (3 năm gần nhất) và khi chuyển sinh hoạt đảng",
+      "ten_tep": "Ban_tu_kiem_diem_hang_nam_3_nam_gan_nhat_va_khi_chuyen_sinh_hoat_dang",
+      "uu_tien": 2
+    },
+    "62": {
+      "ten_day_du": "Bản tự kiểm điểm tại thời điểm chuyển sinh hoạt đảng (có nhận xét của chi bộ)",
+      "ten_tep": "Ban_tu_kiem_diem_tai_thoi_diem_chuyen_sinh_hoat_dang_co_nhan_xet_chi_bo",
+      "uu_tien": 2
+    },
+    "63": {
+      "ten_day_du": "Bản kiểm điểm trong thời gian sinh hoạt đảng ở nước ngoài (có xác nhận cấp ủy ngoài nước)",
+      "ten_tep": "Ban_kiem_diem_trong_thoi_gian_sinh_hoat_dang_o_nuoc_ngoai_co_xac_nhan_cap_uy_ngoai_nuoc",
+      "uu_tien": 2
+    },
+    "64": {
+      "ten_day_du": "Quyết định biểu dương đảng viên bằng văn bản hoặc ghi trong nghị quyết chi bộ",
+      "ten_tep": "QD_bieu_duong_dang_vien_bang_van_ban_hoac_ghi_trong_NQ_chi_bo",
+      "uu_tien": 2
+    },
+    "65": {
+      "ten_day_du": "Bản tự kiểm điểm của đảng viên vi phạm trong quá trình xem xét kỷ luật",
+      "ten_tep": "Ban_tu_kiem_diem_dang_vien_vi_pham_trong_qua_trinh_xem_xet_ky_luat",
+      "uu_tien": 2
+    },
+    "66": {
+      "ten_day_du": "Thông báo vi phạm của cơ quan pháp luật/bản sao bản án hình sự gửi cấp ủy",
+      "ten_tep": "TB_vi_pham_co_quan_phap_luat_ban_sao_ban_an_hinh_su_gui_cap_uy",
+      "uu_tien": 2
+    },
+    "67": {
+      "ten_day_du": "Quyết định giải quyết khiếu nại về kỷ luật hành chính",
+      "ten_tep": "QD_giai_quyet_khieu_nai_ve_ky_luat_hanh_chinh",
+      "uu_tien": 2
+    },
+    "68": {
+      "ten_day_du": "Bản án hình sự có hiệu lực pháp luật (bản sao có chứng thực)",
+      "ten_tep": "Ban_an_hinh_su_co_hieu_luc_phap_luat_ban_sao_co_chung_thuc",
+      "uu_tien": 2
+    },
+    "69": {
+      "ten_day_du": "Kết luận thanh tra/kiểm toán liên quan đến cá nhân đảng viên",
+      "ten_tep": "KL_thanh_tra_kiem_toan_lien_quan_den_ca_nhan_dang_vien",
+      "uu_tien": 2
+    },
+    "70": {
+      "ten_day_du": "Bằng/chứng chỉ lý luận chính trị (sơ cấp/trung cấp/cao cấp/cử nhân)",
+      "ten_tep": "Bang_chung_chi_ly_luan_chinh_tri_so_cap_trung_cap_cao_cap_cu_nhan",
+      "uu_tien": 2
+    },
+    "71": {
+      "ten_day_du": "Quyết định cấp lại Huy hiệu Đảng bị mất đối với cá nhân đảng viên",
+      "ten_tep": "QD_cap_lai_HHD_bi_mat_doi_voi_ca_nhan_dang_vien",
+      "uu_tien": 2
+    },
+    "72": {
+      "ten_day_du": "Quyết định cấp lại thẻ đảng viên bị mất cho cá nhân đảng viên",
+      "ten_tep": "QD_cap_lai_the_dang_vien_bi_mat_cho_ca_nhan_dang_vien",
+      "uu_tien": 2
+    },
+    "73": {
+      "ten_day_du": "Quyết định đổi lại thẻ đảng viên bị hỏng, bị sai cho cá nhân đảng viên",
+      "ten_tep": "QD_doi_lai_the_dang_vien_bi_hong_bi_sai_cho_ca_nhan_dang_vien",
+      "uu_tien": 2
+    },
+    "74": {
+      "ten_day_du": "Quyết định của Tòa án nhân dân/Trích lục hộ tịch về thay đổi họ tên",
+      "ten_tep": "QD_Toa_an_nhan_dan_Trich_luc_ho_tich_ve_thay_doi_ho_ten",
+      "uu_tien": 2
+    },
+    "75": {
+      "ten_day_du": "Khai sinh gốc/Kết luận đính chính ngày tháng năm sinh của cơ quan có thẩm quyền",
+      "ten_tep": "Khai_sinh_goc_KL_dinh_chinh_ngay_thang_nam_sinh_co_quan_co_tham_quyen",
+      "uu_tien": 2
+    },
+    "76": {
+      "ten_day_du": "Xác nhận của UBND/cơ quan công an về thay đổi quê quán, nơi cư trú",
+      "ten_tep": "Xac_nhan_UBND_co_quan_cong_an_ve_thay_doi_que_quan_noi_cu_tru",
+      "uu_tien": 2
+    },
+    "77": {
+      "ten_day_du": "Quyết định xác định lại dân tộc của UBND cấp tỉnh",
+      "ten_tep": "QD_xac_dinh_lai_dan_toc_UBND_cap_tinh",
+      "uu_tien": 2
+    },
+    "78": {
+      "ten_day_du": "Kết luận hủy văn bằng/xác định văn bằng không hợp lệ",
+      "ten_tep": "KL_huy_van_bang_xac_dinh_van_bang_khong_hop_le",
+      "uu_tien": 2
+    },
+    "79": {
+      "ten_day_du": "Đơn xin miễn công tác và sinh hoạt đảng",
+      "ten_tep": "Don_xin_mien_cong_tac_va_sinh_hoat_dang",
+      "uu_tien": 2
+    },
+    "80": {
+      "ten_day_du": "Giấy xác nhận của cơ sở y tế có thẩm quyền (khi miễn vì lý do sức khỏe)",
+      "ten_tep": "Giay_xac_nhan_co_so_y_te_co_tham_quyen_khi_mien_vi_ly_do_suc_khoe",
+      "uu_tien": 2
+    },
+    "81": {
+      "ten_day_du": "Nghị quyết chi bộ về việc cho đảng viên miễn công tác và sinh hoạt đảng",
+      "ten_tep": "NQ_chi_bo_ve_viec_cho_dang_vien_mien_cong_tac_va_sinh_hoat_dang",
+      "uu_tien": 2
+    },
+    "82": {
+      "ten_day_du": "Văn bản bổ sung lý lịch sau khi về nước",
+      "ten_tep": "Van_ban_bo_sung_ly_lich_sau_khi_ve_nuoc",
+      "uu_tien": 2
+    },
+    "83": {
+      "ten_day_du": "Giấy chứng tử của đảng viên",
+      "ten_tep": "Giay_chung_tu_dang_vien",
+      "uu_tien": 2
+    },
+    "84": {
+      "ten_day_du": "Bản tường trình về việc mất hồ sơ đảng viên kèm bản kiểm điểm trách nhiệm",
+      "ten_tep": "Ban_tuong_trinh_ve_viec_mat_ho_so_dang_vien",
+      "uu_tien": 2
+    },
+    "85": {
+      "ten_day_du": "Phiếu đảng viên cũ (các phiên bản trước - không hủy, lưu làm lịch sử)",
+      "ten_tep": "Phieu_dang_vien_cu_cac_phien_ban_truoc_khong_huy_luu_lam_lich_su",
+      "uu_tien": 2
+    },
+    "86": {
+      "ten_day_du": "Các văn bằng, chứng chỉ chuyên môn, nghiệp vụ, ngoại ngữ, tin học, bồi dưỡng chức danh, ngạch, chứng chỉ hành nghề (bản sao có chứng thực)",
+      "ten_tep": "Cac_van_bang_chung_chi_chuyen_mon_nghiep_vu",
+      "uu_tien": 3
+    },
+    "87": {
+      "ten_day_du": "Các quyết định điều động, bổ nhiệm…",
+      "ten_tep": "Cac_QD_dieu_dong_bo_nhiem",
+      "uu_tien": 3
+    },
+    "88": {
+      "ten_day_du": "Quyết định nghỉ hưu",
+      "ten_tep": "QD_nghi_huu",
+      "uu_tien": 3
+    },
+    "89": {
+      "ten_day_du": "Quyết định nghỉ mất sức lao động",
+      "ten_tep": "QD_nghi_mat_suc_lao_dong",
+      "uu_tien": 3
+    },
+    "90": {
+      "ten_day_du": "Quyết định phục viên / chuyển ngành (lực lượng vũ trang)",
+      "ten_tep": "QD_phuc_vien_chuyen_nganh_LLVT",
+      "uu_tien": 3
+    },
+    "91": {
+      "ten_day_du": "Quyết định xuất ngũ (lực lượng vũ trang)",
+      "ten_tep": "QD_xuat_ngu_LLVT",
+      "uu_tien": 3
+    },
+    "92": {
+      "ten_day_du": "Công văn của cấp ủy cơ sở giới thiệu người vào Đảng đã được chi bộ, đảng uỷ cơ sở làm thủ tục đề nghị kết nạp Đảng",
+      "ten_tep": "CV_cap_uy_co_so_gioi_thieu_nguoi_vao_Dang",
+      "uu_tien": 3
+    },
+    "93": {
+      "ten_day_du": "Công văn của cấp ủy có thẩm quyền giới thiệu người vào Đảng đã được cấp uỷ cơ sở làm thủ tục đề nghị kết nạp đảng",
+      "ten_tep": "CV_cap_uy_co_tham_quyen_gioi_thieu_nguoi_vao_Dang",
+      "uu_tien": 3
+    },
+    "94": {
+      "ten_day_du": "Công văn giới thiệu người vào Đảng đã được cấp uỷ có thẩm quyền ra quyết định kết nạp Đảng",
+      "ten_tep": "CV_gioi_thieu_nguoi_vao_Dang",
+      "uu_tien": 3
+    },
+    "95": {
+      "ten_day_du": "Công văn giới thiệu người vào Đảng đã được cấp uỷ có thẩm quyền ra quyết định kết nạp vào Đảng nhưng chuyển ra ngoài đảng bộ cấp xã (tương đương)",
+      "ten_tep": "CV_gioi_thieu_nguoi_vao_Dang_nhung_chuyen_ra_ngoai_dang_bo_cap_xa_tuong_duong",
+      "uu_tien": 3
+    },
+    "96": {
+      "ten_day_du": "Giấy giới thiệu (của đảng uỷ, chi uỷ cơ sở) cử đảng viên hoặc cấp uỷ viên đi thẩm tra lý lịch của người vào Đảng",
+      "ten_tep": "GGT_dang_uy_chi_uy_co_so_cu_dang_vien_hoac_cap_uy_vien_di_tham_tra_ly_lich_nguoi_vao_Dang",
+      "uu_tien": 3
+    },
+    "97": {
+      "ten_day_du": "Công văn đề nghị thẩm tra lý lịch của người vào Đảng",
+      "ten_tep": "CV_de_nghi_tham_tra_ly_lich_nguoi_vao_Dang",
+      "uu_tien": 3
+    },
+    "98": {
+      "ten_day_du": "Công văn chỉ đạo việc làm lại, thực hiện đúng các quy định về thẩm quyền, thủ tục xem xét, quyết định kết nạp đảng viên",
+      "ten_tep": "CV_lam_lai_thuc_hien_dung_cac_quy_dinh_ve_tham_quyen_thu_tuc_xem_xet_QD_ket_nap_dang_vien",
+      "uu_tien": 3
+    },
+    "99": {
+      "ten_day_du": "Công văn chỉ đạo việc làm lại, thực hiện đúng các quy định về thẩm quyền, thủ tục công nhận đảng viên chính thức",
+      "ten_tep": "CV_lam_lai_thuc_hien_dung_cac_quy_dinh_ve_tham_quyen_thu_tuc_cong_nhan_dang_vien_chinh_thuc",
+      "uu_tien": 3
+    },
+    "100": {
+      "ten_day_du": "Phiếu báo đảng viên được công nhận chính thức",
+      "ten_tep": "PB_dang_vien_duoc_cong_nhan_chinh_thuc",
+      "uu_tien": 3
+    },
+    "101": {
+      "ten_day_du": "Phiếu báo đảng viên ra khỏi Đảng",
+      "ten_tep": "PB_dang_vien_ra_khoi_Dang",
+      "uu_tien": 3
+    },
+    "102": {
+      "ten_day_du": "Phiếu báo đảng viên từ trần",
+      "ten_tep": "PB_dang_vien_tu_tran",
+      "uu_tien": 3
+    },
+    "103": {
+      "ten_day_du": "Tờ khai đề nghị tặng Huy hiệu Đảng",
+      "ten_tep": "To_khai_de_nghi_tang_HHD",
+      "uu_tien": 3
+    },
+    "104": {
+      "ten_day_du": "Tờ khai đề nghị truy tặng Huy hiệu Đảng",
+      "ten_tep": "To_khai_de_nghi_truy_tang_HHD",
+      "uu_tien": 3
+    }
+  }
+}
