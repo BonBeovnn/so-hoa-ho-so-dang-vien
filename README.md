@@ -51,7 +51,24 @@ tên hay mã của đơn vị nào được viết thẳng vào mã nguồn — 
 
 ---
 
-## Cài đặt
+## Bản portable — khuyến nghị cho máy không có mạng
+
+Không cần cài Python, không cần Internet, không cần `git clone`. Tải tệp zip
+đã đóng gói sẵn (mang theo cả Python 3.14 64-bit + toàn bộ thư viện) tại:
+
+**[Trang Releases](https://github.com/BonBeovnn/so-hoa-ho-so-dang-vien/releases/tag/portable-v1.0.0)**
+— tệp `SoHoa_HoSoDangVien_Portable_v1.0.0.zip` (~20 MB).
+
+Cách dùng: chép sang máy đích bằng USB, giải nén toàn bộ, bấm đúp
+`start.bat`. Chi tiết trong `DOC_TRUOC_KHI_CHAY.txt` nằm trong tệp zip.
+
+Bản này thay thế cách đóng gói `.exe` (PyInstaller) ở mục dưới — mã nguồn để
+ở dạng rõ ràng thay vì nén thành 1 tệp nhị phân, nên tránh được cảnh báo nhầm
+virus (Bkav, Windows Defender) mà `.exe` PyInstaller chưa ký số hay gặp.
+
+---
+
+## Cài đặt (chạy từ mã nguồn)
 
 Yêu cầu: **Windows** + **Python 3.14 64-bit** (bản đóng gói ngoại tuyến gắn với
 đúng phiên bản này; cài từ mạng thì phiên bản 3.11 trở lên đều chạy).
@@ -74,10 +91,10 @@ mọi trang đều đòi mã phiên.
 
 ---
 
-## Đóng gói thành 1 tệp .exe (không cần cài Python)
+## Đóng gói thành 1 tệp .exe (cách cũ, đã thay bằng bản portable ở trên)
 
-Cách trên vẫn đòi máy đích có đúng Python 3.14 64-bit. Muốn phát cho một máy
-khác mà không chắc có Python, đóng gói bằng
+Cách "Cài đặt" trên vẫn đòi máy đích có đúng Python 3.14 64-bit. Cách này từng
+dùng để phát cho máy không chắc có Python, đóng gói bằng
 [PyInstaller](https://pyinstaller.org/) thành một tệp `.exe` duy nhất, mang
 theo cả trình thông dịch Python:
 
