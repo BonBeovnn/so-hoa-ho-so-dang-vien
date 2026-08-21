@@ -158,7 +158,11 @@ Muốn chạy tự động, đặt tệp `.git/hooks/pre-push` (không có phầ
 
 ```sh
 #!/bin/sh
-exec .venv/Scripts/python.exe scripts/kiem_truoc_khi_day.py
+# PYTHONUTF8=1 bắt buộc: thiếu dòng này, cửa sổ dòng lệnh Git trên Windows
+# thường chạy sai codepage và script tiếng Việt bị UnicodeEncodeError ngay
+# dòng in đầu tiên — chặn nhầm lệnh đẩy vì lý do không liên quan tới nội dung
+# kiểm tra thật.
+PYTHONUTF8=1 exec .venv/Scripts/python.exe scripts/kiem_truoc_khi_day.py
 ```
 
 Hook trả mã thoát khác 0 là Git hủy lệnh đẩy.
