@@ -118,8 +118,7 @@ mỗi lần chạy.
 
 ### Nếu bị báo nhầm virus
 
-Tệp `.exe` **không ký số** (chưa mua chứng chỉ Authenticode — hàng trăm nghìn
-đồng tới vài triệu một năm, không đáng cho một công cụ nội bộ), nên vài phần
+Tệp `.exe` **không ký số** (chưa mua chứng chỉ Authenticode), nên vài phần
 mềm diệt virus dùng **mô hình máy học** để đoán tệp lạ — đặc biệt Bkav và
 Windows Defender (`Trojan:Win32/Wacatac.B!ml` — hậu tố `.ml` nghĩa là "machine
 learning", tức đoán chứ không khớp mẫu virus cụ thể nào) — có thể báo nhầm.
@@ -128,7 +127,7 @@ không riêng gì app này: tệp có hình dạng "một đoạn mã nhỏ + kh
 lớn, entropy cao, tự giải nén ra thư mục tạm lúc chạy" — đúng hình dạng máy
 học coi là đáng ngờ, bất kể bên trong thật sự làm gì.
 
-Cách tự kiểm chứng không cần tin lời hứa suông:
+Cách tự kiểm chứng:
 
 1. Xem ở [VirusTotal](https://www.virustotal.com/) mục **Behavior**: app không
    có `Network comms`, không có `Dropped Files` tồn tại sau khi thoát (những
@@ -234,7 +233,7 @@ trong mục *Tồn tại, hạn chế* — đừng xóa mục đó.
 
 ## Giấy phép
 
-© 2026 **Mèo máy** ([@anhduc97](https://github.com/anhduc97)) — bảo lưu mọi quyền.
+© 2026 ([anhduc97](https://github.com/BonBeovnn)) — bảo lưu mọi quyền.
 
 Mã nguồn công khai để đọc, kiểm chứng và chạy tại chỗ. **Đây không phải giấy
 phép nguồn mở** theo định nghĩa của Open Source Initiative: được dùng và sửa
