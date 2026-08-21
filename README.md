@@ -99,6 +99,43 @@ Khác biệt duy nhất cần nhớ: bản `start.bat` ghi `app/data/` cạnh m�
 thư mục tạm rồi xóa sạch mỗi khi thoát — ghi vào đó thì mất hết dữ liệu qua
 mỗi lần chạy.
 
+### Nếu bị báo nhầm virus
+
+Tệp `.exe` **không ký số** (chưa mua chứng chỉ Authenticode — hàng trăm nghìn
+đồng tới vài triệu một năm, không đáng cho một công cụ nội bộ), nên vài phần
+mềm diệt virus dùng **mô hình máy học** để đoán tệp lạ — đặc biệt Bkav và
+Windows Defender (`Trojan:Win32/Wacatac.B!ml` — hậu tố `.ml` nghĩa là "machine
+learning", tức đoán chứ không khớp mẫu virus cụ thể nào) — có thể báo nhầm.
+Đây là vấn đề đã biết của **mọi** ứng dụng PyInstaller `--onefile` chưa ký số,
+không riêng gì app này: tệp có hình dạng "một đoạn mã nhỏ + khối nén dữ liệu
+lớn, entropy cao, tự giải nén ra thư mục tạm lúc chạy" — đúng hình dạng máy
+học coi là đáng ngờ, bất kể bên trong thật sự làm gì.
+
+Cách tự kiểm chứng không cần tin lời hứa suông:
+
+1. Xem ở [VirusTotal](https://www.virustotal.com/) mục **Behavior**: app không
+   có `Network comms`, không có `Dropped Files` tồn tại sau khi thoát (những
+   tệp `.pyd`/`.dll` ghi vào `%TEMP%` khi chạy đều tự xóa khi tắt — đó là
+   PyInstaller giải nén thư viện, không phải phần mềm gián điệp cài lại).
+2. Mã nguồn ở kho này công khai — đọc trực tiếp `app/main.py` và
+   `app/core/*.py`, không có dòng nào gọi mạng ra ngoài `127.0.0.1`.
+
+Nếu Bkav hoặc phần mềm của cơ quan **chặn hẳn** việc chạy (không chỉ cảnh báo
+lúc tải về):
+
+* Đóng gói lại thành **thư mục** thay vì 1 tệp — thường ít bị báo nhầm hơn vì
+  không có bước tự giải nén vào thư mục tạm lúc khởi động:
+  ```bat
+  packaging\build.bat onedir
+  ```
+  Kết quả ở `packaging\dist_onedir\SoHoa_HoSoDangVien\` — chép cả thư mục.
+* Hoặc quay lại cách chạy bằng `install.bat` + `start.bat` (không đóng gói) —
+  chưa ghi nhận trường hợp nào bị báo nhầm.
+* Gửi báo cáo false positive để nhà cung cấp đối chiếu và bỏ chặn: Microsoft
+  tại [Windows Defender Security
+  Intelligence](https://www.microsoft.com/en-us/wdsi/filesubmission), Bkav
+  qua trang hỗ trợ [bkav.com.vn](https://www.bkav.com.vn/).
+
 ---
 
 ## Chạy test

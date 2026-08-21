@@ -42,9 +42,12 @@ vendor/
 # việc của PyInstaller. Ai cần thì tự chạy build.bat — không hợp lý để một tệp
 # nhị phân 28 MB nằm trong lịch sử Git.
 packaging/build/
+packaging/build_onedir/
 packaging/dist/
+packaging/dist_onedir/
 packaging/*.spec
 *.exe
+*.zip
 
 # =============================================================================
 # HỆ ĐIỀU HÀNH VÀ TRÌNH SOẠN THẢO
